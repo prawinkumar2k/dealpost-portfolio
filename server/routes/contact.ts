@@ -1,0 +1,33 @@
+import { RequestHandler } from "express";
+import nodemailer from "nodemailer";
+
+export const handleContact: RequestHandler = async (req, res) => {
+  const { name, email, message } = req.body;
+
+  if (!name || !email || !message) {
+    return res.status(400).json({ error: "Missing required fields" });
+  }
+
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: "hello@dealpost.co.in",
+      pass: "rmrz eeld dgda zhch",
+    },
+  });
+
+  try {
+    await transporter.sendMail({
+      from: `"Dealpost Contact Form" <hello@dealpost.co.in>`,
+      to: "hello@dealpost.co.in", // sending to themselves
+      replyTo: email,
+      subject: `New Contact Request from ${name}`,
+      text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
+    });
+
+    res.json({ success: true, message: "Message sent successfully!" });
+  } catch (error) {
+    console.error("Error sending email:", error);
+    res.status(500).json({ error: "Failed to send message" });
+  }
+};
