@@ -565,7 +565,7 @@ function DealpostEngine() {
   ];
 
   return (
-    <section ref={containerRef} id="performance" className="py-32 px-6 md:px-10 lg:px-[58px] bg-[#0E544C] text-white relative overflow-hidden">
+    <section ref={containerRef} id="engine" className="py-32 px-6 md:px-10 lg:px-[58px] bg-[#0E544C] text-white relative overflow-hidden">
       <div className="max-w-[1400px] mx-auto relative z-10">
         <Reveal>
           <span className="text-[10px] uppercase tracking-widest font-bold text-[#138F84]">03 / THE ENGINE</span>
@@ -989,6 +989,13 @@ function CompleteBusinessSolution() {
 
 function Contact() {
   const [formData, setFormData] = useState({ name: "", email: "", type: "Performance Marketing", message: "" });
+  const [sent, setSent] = useState(false);
+  
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSent(true);
+    setTimeout(() => setSent(false), 3000);
+  };
   
   return (
     <section id="contact" className="py-32 px-6 md:px-10 lg:px-[58px] bg-[#0E544C] text-white">
@@ -1014,15 +1021,15 @@ function Contact() {
         </div>
         
         <Reveal delay={0.2} className="bg-[#061F1C] p-10 md:p-16 rounded-[40px] border border-[rgba(255,255,255,0.05)]">
-          <form className="flex flex-col gap-8" onSubmit={(e) => e.preventDefault()}>
+          <form className="flex flex-col gap-8" onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <label className="flex flex-col gap-2">
                 <span className="text-[10px] uppercase tracking-widest font-bold opacity-50">Name</span>
-                <input type="text" className="bg-transparent border-b border-[rgba(255,255,255,0.2)] pb-4 outline-none focus:border-[#138F84] transition-colors text-xl font-bold" />
+                <input required type="text" className="bg-transparent border-b border-[rgba(255,255,255,0.2)] pb-4 outline-none focus:border-[#138F84] transition-colors text-xl font-bold" />
               </label>
               <label className="flex flex-col gap-2">
                 <span className="text-[10px] uppercase tracking-widest font-bold opacity-50">Email</span>
-                <input type="email" className="bg-transparent border-b border-[rgba(255,255,255,0.2)] pb-4 outline-none focus:border-[#138F84] transition-colors text-xl font-bold" />
+                <input required type="email" className="bg-transparent border-b border-[rgba(255,255,255,0.2)] pb-4 outline-none focus:border-[#138F84] transition-colors text-xl font-bold" />
               </label>
             </div>
             
@@ -1041,11 +1048,11 @@ function Contact() {
             
             <label className="flex flex-col gap-2">
               <span className="text-[10px] uppercase tracking-widest font-bold opacity-50">Message</span>
-              <textarea rows={3} className="bg-transparent border-b border-[rgba(255,255,255,0.2)] pb-4 outline-none focus:border-[#138F84] transition-colors text-xl font-bold resize-none" />
+              <textarea required rows={3} className="bg-transparent border-b border-[rgba(255,255,255,0.2)] pb-4 outline-none focus:border-[#138F84] transition-colors text-xl font-bold resize-none" />
             </label>
             
-            <button className="mt-8 bg-[#138F84] text-[#061F1C] py-6 px-10 rounded-full font-black uppercase tracking-widest text-xs flex items-center justify-between hover:bg-white transition-colors w-full group">
-              START A CONVERSATION <ArrowUpRight size={20} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+            <button type="submit" className={`mt-8 py-6 px-10 rounded-full font-black uppercase tracking-widest text-xs flex items-center justify-between transition-colors w-full group ${sent ? 'bg-white text-[#061F1C]' : 'bg-[#138F84] text-[#061F1C] hover:bg-white'}`}>
+              {sent ? "MESSAGE SENT" : "START A CONVERSATION"} {!sent && <ArrowUpRight size={20} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />}
             </button>
           </form>
         </Reveal>
@@ -1379,7 +1386,7 @@ function PerformanceDashboard() {
   const isInView = useInView(containerRef, { once: true, margin: "-100px" });
 
   return (
-    <section ref={containerRef} className="py-32 px-6 md:px-10 lg:px-[58px] bg-[#061F1C] text-white">
+    <section ref={containerRef} id="performance" className="py-32 px-6 md:px-10 lg:px-[58px] bg-[#061F1C] text-white">
       <div className="max-w-[1400px] mx-auto flex flex-col lg:flex-row gap-16 items-center">
         <div className="w-full lg:w-1/3">
           <Reveal>
