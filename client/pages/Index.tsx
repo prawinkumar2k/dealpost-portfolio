@@ -513,7 +513,7 @@ function Contact() {
               </div>
               <div>
                 <strong className="text-[10px] uppercase tracking-widest font-bold opacity-50 block mb-2">PHONE</strong>
-                <a href="tel:+919999999999" className="text-2xl font-bold hover:text-[#138F84] transition-colors">+91 99999 99999</a>
+                <a href="tel:+918015004952" className="text-2xl font-bold hover:text-[#138F84] transition-colors">+91 8015004952</a>
               </div>
             </div>
           </Reveal>
