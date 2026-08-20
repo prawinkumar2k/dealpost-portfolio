@@ -1412,7 +1412,7 @@ function Founder() {
                 transition={{ duration: 1, delay: name.length * 0.05 + 0.2 }}
                 className="text-[10px] uppercase tracking-widest font-bold text-[#138F84] block mt-1"
               >
-                CO-FOUNDER — DEALPOST
+                FOUNDER — DEALPOST
               </motion.span>
             </div>
           </div>
