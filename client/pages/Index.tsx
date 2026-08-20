@@ -259,21 +259,37 @@ function Hero() {
         <div className="w-full h-full" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
       </motion.div>
 
-      {/* Floating Elements */}
+      {/* Floating Elements / Parallax Images */}
       <motion.div 
-        animate={{ y: [-20, 20, -20], rotate: [0, 5, 0] }} 
-        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-[20%] right-[15%] w-32 md:w-48 aspect-video bg-[#138F84]/20 rounded-lg border border-[#138F84]/50 backdrop-blur-sm hidden md:flex items-center justify-center pointer-events-none z-0"
+        style={{ y: useTransform(scrollY, [0, 800], [0, -100]) }}
+        animate={{ y: [-15, 15, -15], rotate: [0, 3, 0] }} 
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute top-[10%] right-[5%] lg:right-[15%] w-40 md:w-64 aspect-video rounded-xl overflow-hidden shadow-2xl hidden md:block z-0 pointer-events-none opacity-40 border border-[#138F84]/20"
       >
-        <span className="text-[10px] font-bold tracking-widest uppercase text-[#138F84]">DASHBOARD</span>
+        <img src="/project7.png" alt="Tidel" className="w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-[#061F1C]/40 mix-blend-multiply" />
       </motion.div>
+      
       <motion.div 
-        animate={{ y: [20, -20, 20], rotate: [0, -5, 0] }} 
+        style={{ y: useTransform(scrollY, [0, 800], [0, -200]) }}
+        animate={{ y: [20, -20, 20], rotate: [0, -4, 0] }} 
         transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        className="absolute bottom-[20%] left-[10%] w-24 md:w-32 aspect-square bg-[#0E544C]/40 rounded-full border border-[#138F84]/30 backdrop-blur-sm hidden md:flex items-center justify-center pointer-events-none z-0"
+        className="absolute bottom-[20%] left-[5%] lg:left-[10%] w-32 md:w-48 aspect-square rounded-2xl overflow-hidden shadow-2xl hidden md:block z-0 pointer-events-none opacity-30 border border-[#138F84]/20"
       >
-        <span className="text-[8px] font-bold tracking-widest uppercase text-white/50 text-center">BRAND<br/>IDENTITY</span>
+        <img src="/project2.png" alt="Aerospace" className="w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-[#061F1C]/40 mix-blend-multiply" />
       </motion.div>
+
+      <motion.div 
+        style={{ y: useTransform(scrollY, [0, 800], [0, 150]) }}
+        animate={{ scale: [1, 1.05, 1], rotate: [0, 90, 0] }} 
+        transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+        className="absolute top-[60%] right-[25%] w-24 h-24 border border-[#138F84]/30 rounded-full hidden lg:block z-0 pointer-events-none"
+      />
+      <motion.div 
+        style={{ y: useTransform(scrollY, [0, 800], [0, 100]) }}
+        className="absolute top-[40%] left-[30%] w-16 h-16 border border-white/10 rotate-45 hidden lg:block z-0 pointer-events-none"
+      />
 
       <div className="max-w-[1600px] mx-auto w-full relative z-10 flex flex-col items-start gap-12 mt-12 md:mt-24">
         <Reveal delay={0.1}>
@@ -963,6 +979,20 @@ function CompleteBusinessSolution() {
           />
 
           <div className="relative h-full w-full">
+            {/* Background Parallax Images for Complete Business Solution */}
+            <motion.div
+              style={{ y: useTransform(scrollYProgress, [0, 1], ["0%", "50%"]) }}
+              className="absolute right-0 top-[20%] w-48 aspect-square rounded-2xl overflow-hidden opacity-20 pointer-events-none border border-[#138F84]/20 mix-blend-screen hidden md:block"
+            >
+              <img src="/project1.png" alt="Brand" className="w-full h-full object-cover" />
+            </motion.div>
+            <motion.div
+              style={{ y: useTransform(scrollYProgress, [0, 1], ["0%", "-50%"]) }}
+              className="absolute right-[20%] top-[60%] w-64 aspect-video rounded-2xl overflow-hidden opacity-30 pointer-events-none border border-[#138F84]/20 mix-blend-screen hidden md:block"
+            >
+              <img src="/project8.png" alt="Digital" className="w-full h-full object-cover" />
+            </motion.div>
+
             {steps.map((step, i) => (
               <motion.div 
                 key={step.label}
@@ -990,11 +1020,29 @@ function CompleteBusinessSolution() {
 function Contact() {
   const [formData, setFormData] = useState({ name: "", email: "", type: "Performance Marketing", message: "" });
   const [sent, setSent] = useState(false);
+  const [loading, setLoading] = useState(false);
   
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSent(true);
-    setTimeout(() => setSent(false), 3000);
+    setLoading(true);
+    
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData)
+      });
+      
+      if (response.ok) {
+        setSent(true);
+        setFormData({ name: "", email: "", type: "Performance Marketing", message: "" });
+        setTimeout(() => setSent(false), 3000);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
   
   return (
@@ -1025,17 +1073,17 @@ function Contact() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <label className="flex flex-col gap-2">
                 <span className="text-[10px] uppercase tracking-widest font-bold opacity-50">Name</span>
-                <input required type="text" className="bg-transparent border-b border-[rgba(255,255,255,0.2)] pb-4 outline-none focus:border-[#138F84] transition-colors text-xl font-bold" />
+                <input required type="text" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="bg-transparent border-b border-[rgba(255,255,255,0.2)] pb-4 outline-none focus:border-[#138F84] transition-colors text-xl font-bold" />
               </label>
               <label className="flex flex-col gap-2">
                 <span className="text-[10px] uppercase tracking-widest font-bold opacity-50">Email</span>
-                <input required type="email" className="bg-transparent border-b border-[rgba(255,255,255,0.2)] pb-4 outline-none focus:border-[#138F84] transition-colors text-xl font-bold" />
+                <input required type="email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} className="bg-transparent border-b border-[rgba(255,255,255,0.2)] pb-4 outline-none focus:border-[#138F84] transition-colors text-xl font-bold" />
               </label>
             </div>
             
             <label className="flex flex-col gap-2">
               <span className="text-[10px] uppercase tracking-widest font-bold opacity-50">What do you need?</span>
-              <select className="bg-transparent border-b border-[rgba(255,255,255,0.2)] pb-4 outline-none focus:border-[#138F84] transition-colors text-xl font-bold appearance-none cursor-pointer">
+              <select value={formData.type} onChange={(e) => setFormData({...formData, type: e.target.value})} className="bg-transparent border-b border-[rgba(255,255,255,0.2)] pb-4 outline-none focus:border-[#138F84] transition-colors text-xl font-bold appearance-none cursor-pointer">
                 <option value="Branding" className="bg-[#061F1C]">Branding</option>
                 <option value="Social Media" className="bg-[#061F1C]">Social Media</option>
                 <option value="Performance Marketing" className="bg-[#061F1C]">Performance Marketing</option>
@@ -1048,11 +1096,11 @@ function Contact() {
             
             <label className="flex flex-col gap-2">
               <span className="text-[10px] uppercase tracking-widest font-bold opacity-50">Message</span>
-              <textarea required rows={3} className="bg-transparent border-b border-[rgba(255,255,255,0.2)] pb-4 outline-none focus:border-[#138F84] transition-colors text-xl font-bold resize-none" />
+              <textarea required rows={3} value={formData.message} onChange={(e) => setFormData({...formData, message: e.target.value})} className="bg-transparent border-b border-[rgba(255,255,255,0.2)] pb-4 outline-none focus:border-[#138F84] transition-colors text-xl font-bold resize-none" />
             </label>
             
-            <button type="submit" className={`mt-8 py-6 px-10 rounded-full font-black uppercase tracking-widest text-xs flex items-center justify-between transition-colors w-full group ${sent ? 'bg-white text-[#061F1C]' : 'bg-[#138F84] text-[#061F1C] hover:bg-white'}`}>
-              {sent ? "MESSAGE SENT" : "START A CONVERSATION"} {!sent && <ArrowUpRight size={20} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />}
+            <button type="submit" disabled={loading} className={`mt-8 py-6 px-10 rounded-full font-black uppercase tracking-widest text-xs flex items-center justify-between transition-colors w-full group ${sent ? 'bg-white text-[#061F1C]' : 'bg-[#138F84] text-[#061F1C] hover:bg-white'} disabled:opacity-50`}>
+              {loading ? "SENDING..." : sent ? "MESSAGE SENT" : "START A CONVERSATION"} {!sent && !loading && <ArrowUpRight size={20} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />}
             </button>
           </form>
         </Reveal>
@@ -1492,18 +1540,19 @@ function PackagingDesign() {
                 initial={{ opacity: 1 }}
                 animate={isInView ? { opacity: [1, 0, 0] } : {}}
                 transition={{ duration: 2, delay: 0.5, times: [0, 0.5, 1] }}
-                className="absolute text-white font-black tracking-widest text-2xl"
+                className="absolute text-[#138F84] font-black tracking-widest text-2xl z-20"
              >
                FLAT ARTWORK
              </motion.div>
              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={isInView ? { opacity: [0, 0, 1] } : {}}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={isInView ? { opacity: [0, 0, 1], scale: [0.8, 1, 1] } : {}}
                 transition={{ duration: 2, delay: 0.5, times: [0, 0.5, 1] }}
-                className="absolute text-white font-black tracking-widest text-4xl text-center leading-none"
+                className="absolute inset-0 w-full h-full object-cover rounded-xl overflow-hidden shadow-2xl"
                 style={{ transform: "translateZ(50px)" }}
              >
-               DEALPOST<br/>BOX.
+               <img src="/project4.png" alt="Packaging" className="w-full h-full object-cover" />
+               <div className="absolute inset-0 bg-[#0E544C]/30 mix-blend-multiply" />
              </motion.div>
           </motion.div>
         </div>
@@ -1556,18 +1605,18 @@ function InteriorSpatial() {
                      initial={{ opacity: 1 }}
                      animate={{ opacity: 0 }}
                      transition={{ duration: 0.5, delay: 1 }}
-                     className="text-[#138F84] font-bold text-xs tracking-widest uppercase"
+                     className="text-[#138F84] font-bold text-xs tracking-widest uppercase z-10 relative"
                    >
                      FLOOR PLAN
                    </motion.span>
-                   <motion.span 
+                   <motion.div 
                      initial={{ opacity: 0 }}
                      animate={{ opacity: 1 }}
                      transition={{ duration: 0.5, delay: 1.5 }}
-                     className="absolute text-white font-black text-xl tracking-widest uppercase text-center"
+                     className="absolute inset-0 rounded-[20px] overflow-hidden"
                    >
-                     PHYSICAL<br/>SPACE
-                   </motion.span>
+                     <img src="/project17.png" alt="Spatial Design" className="w-full h-full object-cover" />
+                   </motion.div>
                 </motion.div>
                 
                 <motion.div 
