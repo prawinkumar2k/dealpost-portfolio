@@ -18,6 +18,136 @@ const theme = {
 
 // --- REUSABLE COMPONENTS ---
 
+function CustomCursor() {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [cursorVariant, setCursorVariant] = useState("default");
+  
+  useEffect(() => {
+    const mouseMove = (e: MouseEvent) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+    
+    const handleMouseOver = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      const cursorTarget = target.closest('[data-cursor]');
+      if (cursorTarget) {
+        setCursorVariant(cursorTarget.getAttribute('data-cursor') || "hover");
+      } else if (target.closest('button') || target.closest('a')) {
+        setCursorVariant("hover");
+      } else {
+        setCursorVariant("default");
+      }
+    };
+
+    window.addEventListener("mousemove", mouseMove);
+    window.addEventListener("mouseover", handleMouseOver);
+    return () => {
+      window.removeEventListener("mousemove", mouseMove);
+      window.removeEventListener("mouseover", handleMouseOver);
+    };
+  }, []);
+
+  const variants = {
+    default: {
+      x: mousePosition.x - 8,
+      y: mousePosition.y - 8,
+      width: 16,
+      height: 16,
+      backgroundColor: "rgba(255, 255, 255, 1)",
+      mixBlendMode: "difference" as any,
+    },
+    hover: {
+      x: mousePosition.x - 24,
+      y: mousePosition.y - 24,
+      width: 48,
+      height: 48,
+      backgroundColor: "rgba(255, 255, 255, 0.2)",
+      border: "1px solid rgba(255, 255, 255, 0.5)",
+      mixBlendMode: "normal" as any,
+    },
+    explore: {
+      x: mousePosition.x - 40,
+      y: mousePosition.y - 40,
+      width: 80,
+      height: 80,
+      backgroundColor: "rgba(19, 143, 132, 1)",
+      mixBlendMode: "normal" as any,
+    }
+  };
+
+  return (
+    <>
+      <motion.div
+        className="fixed top-0 left-0 rounded-full pointer-events-none z-[100] hidden md:flex items-center justify-center text-white font-bold text-[10px] tracking-widest text-center"
+        variants={variants}
+        animate={cursorVariant}
+        transition={{ type: "spring", stiffness: 500, damping: 28, mass: 0.5 }}
+      >
+        <AnimatePresence>
+          {cursorVariant === 'explore' && (
+            <motion.span initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.5 }}>
+              EXPLORE
+            </motion.span>
+          )}
+        </AnimatePresence>
+      </motion.div>
+    </>
+  );
+}
+
+function MagneticButton({ children, className = "", ...props }: any) {
+  const ref = useRef<HTMLButtonElement>(null);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+
+  const handleMouse = (e: React.MouseEvent) => {
+    if (!ref.current) return;
+    const { clientX, clientY } = e;
+    const { height, width, left, top } = ref.current.getBoundingClientRect();
+    const middleX = clientX - (left + width / 2);
+    const middleY = clientY - (top + height / 2);
+    setPosition({ x: middleX * 0.3, y: middleY * 0.3 });
+  };
+
+  const reset = () => {
+    setPosition({ x: 0, y: 0 });
+  };
+
+  return (
+    <motion.button
+      ref={ref}
+      onMouseMove={handleMouse}
+      onMouseLeave={reset}
+      animate={{ x: position.x, y: position.y }}
+      transition={{ type: "spring", stiffness: 150, damping: 15, mass: 0.1 }}
+      className={className}
+      {...props}
+    >
+      {children}
+    </motion.button>
+  );
+}
+
+function ScrollProgress() {
+  const { scrollYProgress } = useScroll();
+  const scaleY = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
+
+  return (
+    <div className="fixed right-0 top-0 bottom-0 w-2 md:w-3 z-[90] pointer-events-none flex flex-col justify-end">
+      <div className="absolute top-1/2 -translate-y-1/2 right-4 text-[8px] md:text-[10px] font-bold tracking-widest text-[#138F84] rotate-90 origin-right whitespace-nowrap opacity-50 mix-blend-difference hidden md:block">
+        SCROLL PROGRESS
+      </div>
+      <motion.div
+        className="w-full bg-[#138F84] origin-top"
+        style={{ scaleY, height: "100%" }}
+      />
+    </div>
+  );
+}
+
 function Reveal({ children, delay = 0, className = "" }: { children: ReactNode; delay?: number; className?: string }) {
   return (
     <motion.div
@@ -96,76 +226,109 @@ function Loader() {
 }
 
 function Hero() {
-  const words = ["REEL", "AD", "CLICK", "LEAD", "BRAND", "WEBSITE", "SOFTWARE", "PODCAST"];
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollY } = useScroll();
+  
+  const yBg = useTransform(scrollY, [0, 1000], [0, 300]);
+  const opacity = useTransform(scrollY, [0, 500], [1, 0]);
   
   return (
-    <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#0E544C] text-white pt-24 px-6 md:px-10 lg:px-[58px]">
-      <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-20">
-        {words.map((word, i) => (
-          <motion.div
-            key={i}
-            animate={{ 
-              y: ["-20%", "20%"], 
-              x: i % 2 === 0 ? ["-10%", "10%"] : ["10%", "-10%"],
-              rotate: i % 2 === 0 ? [0, 5, -5, 0] : [0, -5, 5, 0]
-            }}
-            transition={{ duration: 8 + i * 2, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
-            className="absolute font-black text-4xl md:text-6xl lg:text-8xl tracking-tighter text-[#138F84] mix-blend-screen opacity-30"
-            style={{ 
-              top: `${Math.random() * 80 + 10}%`, 
-              left: `${Math.random() * 80 + 10}%` 
-            }}
-          >
-            {word}
-          </motion.div>
-        ))}
-      </div>
+    <section ref={containerRef} id="home" className="relative min-h-[100svh] flex flex-col justify-center px-6 md:px-10 lg:px-[58px] bg-[#061F1C] text-white overflow-hidden pt-20">
+      {/* Background Grid Pattern */}
+      <motion.div style={{ y: yBg }} className="absolute inset-0 opacity-10 pointer-events-none">
+        <div className="w-full h-full" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
+      </motion.div>
 
-      <div className="relative z-10 w-full max-w-[1400px] mx-auto flex flex-col justify-center min-h-[70vh]">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.5 }}
-          className="flex items-center gap-4 mb-8"
-        >
-          <span className="text-[9px] uppercase tracking-[0.2em] font-bold text-[#138F84]">DEALPOST</span>
-          <div className="h-[1px] w-12 bg-[#138F84] opacity-50" />
-          <span className="text-[9px] uppercase tracking-[0.2em] font-bold opacity-80">CREATIVE × MARKETING × TECHNOLOGY</span>
-        </motion.div>
+      {/* Floating Elements */}
+      <motion.div 
+        animate={{ y: [-20, 20, -20], rotate: [0, 5, 0] }} 
+        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute top-[20%] right-[15%] w-32 md:w-48 aspect-video bg-[#138F84]/20 rounded-lg border border-[#138F84]/50 backdrop-blur-sm hidden md:flex items-center justify-center pointer-events-none z-0"
+      >
+        <span className="text-[10px] font-bold tracking-widest uppercase text-[#138F84]">DASHBOARD</span>
+      </motion.div>
+      <motion.div 
+        animate={{ y: [20, -20, 20], rotate: [0, -5, 0] }} 
+        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+        className="absolute bottom-[20%] left-[10%] w-24 md:w-32 aspect-square bg-[#0E544C]/40 rounded-full border border-[#138F84]/30 backdrop-blur-sm hidden md:flex items-center justify-center pointer-events-none z-0"
+      >
+        <span className="text-[8px] font-bold tracking-widest uppercase text-white/50 text-center">BRAND<br/>IDENTITY</span>
+      </motion.div>
+
+      <div className="max-w-[1600px] mx-auto w-full relative z-10 flex flex-col items-start gap-12 mt-12 md:mt-24">
+        <Reveal delay={0.1}>
+          <div className="inline-block border border-[rgba(255,255,255,0.2)] px-6 py-2 rounded-full text-[10px] uppercase tracking-widest font-bold bg-[rgba(255,255,255,0.05)] backdrop-blur-sm">
+            INTERACTIVE DIGITAL EXPERIENCE
+          </div>
+        </Reveal>
         
-        <div className="overflow-hidden">
-          <motion.h1 
-            initial={{ y: "100%" }}
-            animate={{ y: 0 }}
-            transition={{ duration: 1, delay: 1.6, ease: [0.16, 1, 0.3, 1] }}
-            className="text-[12vw] md:text-[110px] lg:text-[140px] leading-[0.85] font-black tracking-tighter uppercase"
-          >
-            WE MAKE<br />
-            BRANDS<br />
-            IMPOSSIBLE<br />
-            <em className="not-italic text-[#138F84]">TO IGNORE.</em>
-          </motion.h1>
+        <div className="flex flex-col uppercase">
+          <div className="overflow-hidden">
+            <motion.h1 
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1], delay: 0.2 }}
+              className="text-7xl md:text-9xl lg:text-[140px] font-black tracking-tighter leading-[0.85] text-white"
+            >
+              WE BUILD
+            </motion.h1>
+          </div>
+          <div className="overflow-hidden flex items-center gap-6">
+            <motion.h1 
+              initial={{ y: "100%", clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0% 100%)" }}
+              animate={{ y: 0, clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)" }}
+              transition={{ duration: 1, ease: [0.76, 0, 0.24, 1], delay: 0.5 }}
+              className="text-7xl md:text-9xl lg:text-[140px] font-black tracking-tighter leading-[0.85] text-[#138F84]"
+            >
+              BRANDS
+            </motion.h1>
+          </div>
+          <div className="overflow-hidden">
+            <motion.h1 
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1.2, ease: "easeOut", delay: 0.9 }}
+              className="text-7xl md:text-9xl lg:text-[140px] font-black tracking-tighter leading-[0.85] text-white italic pr-4"
+            >
+              THAT MOVE.
+            </motion.h1>
+          </div>
         </div>
 
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 2.2 }}
-          className="mt-16 max-w-xl flex flex-col md:flex-row gap-8 items-start md:items-center"
-        >
-          <p className="text-sm md:text-base opacity-80 font-medium leading-relaxed flex-1">
-            Dealpost brings creativity, strategy, technology and performance together to help brands stand out, connect with people and move forward.
-          </p>
-          <div className="flex flex-col gap-4">
-            <SectionLink id="about" className="bg-[#138F84] text-[#061F1C] px-8 py-4 rounded-full text-[10px] uppercase tracking-widest font-bold flex items-center justify-between gap-4 hover:bg-white transition-colors">
+        <motion.div style={{ opacity }} className="w-full flex flex-col md:flex-row justify-between items-start md:items-end mt-12 gap-12">
+          <Reveal delay={1.4} className="max-w-md">
+            <p className="text-sm md:text-base font-bold opacity-70 leading-relaxed">
+              We are a creative studio, digital product lab, and performance marketing powerhouse united in one connected ecosystem.
+            </p>
+          </Reveal>
+          
+          <Reveal delay={1.5}>
+            <MagneticButton 
+              onClick={() => {
+                document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="bg-[#138F84] text-[#061F1C] px-10 py-6 rounded-full text-xs font-black uppercase tracking-widest flex items-center gap-4 hover:bg-white transition-colors duration-300"
+            >
               EXPLORE OUR WORLD <ArrowUpRight size={16} />
-            </SectionLink>
-            <SectionLink id="contact" className="border border-[rgba(255,255,255,0.2)] px-8 py-4 rounded-full text-[10px] uppercase tracking-widest font-bold flex items-center justify-between gap-4 hover:bg-[rgba(255,255,255,0.1)] transition-colors">
-              START A PROJECT <ArrowUpRight size={16} />
-            </SectionLink>
-          </div>
+            </MagneticButton>
+          </Reveal>
         </motion.div>
       </div>
+      
+      {/* Scroll indicator */}
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 2, duration: 1 }}
+        className="absolute bottom-10 left-[58px] flex flex-col items-center gap-2"
+      >
+        <span className="text-[8px] font-bold tracking-widest uppercase opacity-50 rotate-90 mb-6">SCROLL</span>
+        <motion.div 
+          animate={{ height: [0, 40, 0], y: [0, 0, 40] }}
+          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+          className="w-[1px] bg-white opacity-30"
+        />
+      </motion.div>
     </section>
   );
 }
@@ -819,7 +982,9 @@ export default function Index() {
   }, []);
 
   return (
-    <main className="bg-[#0E544C] min-h-screen selection:bg-[#138F84] selection:text-white">
+    <main className="bg-[#0E544C] min-h-screen selection:bg-[#138F84] selection:text-white cursor-none">
+      <CustomCursor />
+      <ScrollProgress />
       <Loader />
       <Navigation />
       <Hero />
