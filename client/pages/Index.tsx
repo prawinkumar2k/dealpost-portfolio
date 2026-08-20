@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { motion, useScroll, useTransform, AnimatePresence, useSpring, useInView } from "framer-motion";
 import Lenis from "lenis";
 
-const dealpostLogo = "https://cdn.builder.io/api/v1/image/assets%2F7ed07d18e9c74c61ae6c4e963ff0281d%2Fe77ecdba863d43509e2e5e0954c9337a?format=webp&width=800&height=1200";
+const dealpostLogo = "/pdf_img_1.jpeg";
 
 // Custom theme colors based on guidelines
 const theme = {
@@ -483,12 +483,12 @@ function Ecosystem() {
   });
 
   const nodes = [
-    { id: "brand", label: "BRAND", x: -180, y: -150, details: ["Strategy", "Identity", "Guidelines"] },
-    { id: "social", label: "SOCIAL", x: 180, y: -150, details: ["Instagram", "LinkedIn", "Reels"] },
-    { id: "performance", label: "PERFORMANCE", x: -250, y: 0, details: ["Ads", "PPC", "Analytics"] },
-    { id: "digital", label: "DIGITAL", x: 250, y: 0, details: ["Websites", "UI/UX", "Apps"] },
-    { id: "content", label: "CONTENT", x: -180, y: 150, details: ["Copy", "Video", "Photo"] },
-    { id: "software", label: "SOFTWARE", x: 180, y: 150, details: ["Dashboards", "CMS", "API"] }
+    { id: "brand", label: "BRAND", x: -30, y: -30, details: ["Strategy", "Identity", "Guidelines"] },
+    { id: "social", label: "SOCIAL", x: 30, y: -30, details: ["Instagram", "LinkedIn", "Reels"] },
+    { id: "performance", label: "PERFORMANCE", x: -40, y: 0, details: ["Ads", "PPC", "Analytics"] },
+    { id: "digital", label: "DIGITAL", x: 40, y: 0, details: ["Websites", "UI/UX", "Apps"] },
+    { id: "content", label: "CONTENT", x: -30, y: 30, details: ["Copy", "Video", "Photo"] },
+    { id: "software", label: "SOFTWARE", x: 30, y: 30, details: ["Dashboards", "CMS", "API"] }
   ];
 
   const scale = useTransform(scrollYProgress, [0, 1], [0.8, 1]);
@@ -508,15 +508,15 @@ function Ecosystem() {
         className="relative w-full max-w-[800px] aspect-square md:aspect-video mx-auto flex items-center justify-center mt-12"
       >
         {/* Connection Lines (SVG) */}
-        <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="-400 -300 800 600" preserveAspectRatio="xMidYMid meet">
+        <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible" viewBox="-50 -50 100 100" preserveAspectRatio="none">
           {nodes.map((node, i) => (
             <motion.line
               key={`line-${node.id}`}
               x1="0" y1="0"
               x2={node.x} y2={node.y}
               stroke="#0E544C"
-              strokeWidth="2"
-              strokeDasharray="4 4"
+              strokeWidth="0.5"
+              strokeDasharray="1 1"
               initial={{ pathLength: 0, opacity: 0 }}
               whileInView={{ pathLength: 1, opacity: 0.3 }}
               viewport={{ once: true, margin: "-100px" }}
@@ -542,11 +542,11 @@ function Ecosystem() {
           <motion.div
             key={node.id}
             initial={{ opacity: 0, x: 0, y: 0, scale: 0 }}
-            whileInView={{ opacity: 1, x: node.x, y: node.y, scale: 1 }}
+            whileInView={{ opacity: 1, x: "-50%", y: "-50%", scale: 1 }}
             viewport={{ once: true }}
             transition={{ type: "spring", stiffness: 200, damping: 20, delay: 0.5 + i * 0.1 }}
             className="absolute group z-10"
-            style={{ left: `calc(50% + ${node.x}px)`, top: `calc(50% + ${node.y}px)`, x: "-50%", y: "-50%" }}
+            style={{ left: `calc(50% + ${node.x}%)`, top: `calc(50% + ${node.y}%)` }}
             onClick={() => {
               let type = 'Branding';
               if (node.label === 'SOCIAL') type = 'Social Media';
@@ -973,8 +973,8 @@ function CompleteBusinessSolution() {
   const yPos = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
   return (
-    <section ref={containerRef} id="complete-solution" className="bg-[#126F65] text-white py-32 px-6 md:px-10 lg:px-[58px] min-h-[300vh] relative">
-      <div className="sticky top-0 h-screen flex flex-col md:flex-row items-center justify-between gap-12 max-w-[1400px] mx-auto py-20">
+    <section ref={containerRef} id="complete-solution" className="bg-[#126F65] text-white py-20 md:py-32 px-6 md:px-10 lg:px-[58px] min-h-[300vh] relative">
+      <div className="sticky top-0 min-h-screen md:h-screen flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12 max-w-[1400px] mx-auto py-10 md:py-20">
         
         <div className="w-full md:w-1/3 flex flex-col gap-6">
           <Reveal>
@@ -988,7 +988,7 @@ function CompleteBusinessSolution() {
           </Reveal>
         </div>
 
-        <div className="w-full md:w-2/3 h-[70vh] relative border-l border-white/20 pl-10 md:pl-20 py-10 flex flex-col">
+        <div className="w-full md:w-2/3 h-[50vh] md:h-[70vh] relative border-l border-white/20 pl-6 md:pl-20 py-4 md:py-10 flex flex-col overflow-hidden">
           <motion.div 
             className="absolute top-0 left-[-2px] w-[3px] bg-white h-[20%] shadow-[0_0_20px_white]"
             style={{ top: yPos }}
@@ -1549,7 +1549,7 @@ function PackagingDesign() {
           </h2>
         </Reveal>
 
-        <div className="relative w-full h-[400px] md:h-[500px] mt-16 flex items-center justify-center">
+        <div className="relative w-full h-[300px] md:h-[500px] mt-8 md:mt-16 flex items-center justify-center">
           <motion.div
             initial={{ scale: 1, rotateX: 0, rotateY: 0 }}
             animate={isInView ? {
@@ -1608,7 +1608,7 @@ function InteriorSpatial() {
           </Reveal>
         </div>
 
-        <div className="relative h-[500px] bg-[#F3FAF7] rounded-[40px] border border-[#138F84]/20 p-8 flex items-center justify-center overflow-hidden">
+        <div className="relative h-[300px] md:h-[500px] bg-[#F3FAF7] rounded-[40px] border border-[#138F84]/20 p-4 md:p-8 flex items-center justify-center overflow-hidden">
           {/* Blueprint Grid */}
           <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'linear-gradient(#138F84 1px, transparent 1px), linear-gradient(90deg, #138F84 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
           
