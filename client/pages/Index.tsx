@@ -531,7 +531,8 @@ function Ecosystem() {
           whileInView={{ scale: 1 }}
           viewport={{ once: true }}
           transition={{ type: "spring", stiffness: 200, damping: 20 }}
-          className="absolute z-20 w-32 h-32 md:w-40 md:h-40 bg-[#0E544C] rounded-full flex items-center justify-center shadow-2xl border-4 border-white cursor-pointer"
+          className="absolute z-20 w-32 h-32 md:w-40 md:h-40 bg-[#0E544C] rounded-full flex items-center justify-center shadow-2xl border-4 border-white cursor-pointer hover:scale-110 transition-transform"
+          onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
         >
           <span className="text-white font-black tracking-widest uppercase text-xs md:text-sm">DEALPOST</span>
         </motion.div>
@@ -540,14 +541,22 @@ function Ecosystem() {
         {nodes.map((node, i) => (
           <motion.div
             key={node.id}
-            initial={{ opacity: 0, x: 0, y: 0 }}
-            whileInView={{ opacity: 1, x: node.x, y: node.y }}
+            initial={{ opacity: 0, x: 0, y: 0, scale: 0 }}
+            whileInView={{ opacity: 1, x: node.x, y: node.y, scale: 1 }}
             viewport={{ once: true }}
-            transition={{ type: "spring", stiffness: 100, damping: 15, delay: 0.5 + i * 0.1 }}
-            className="absolute z-10 group cursor-pointer flex flex-col items-center"
-            data-cursor="explore"
+            transition={{ type: "spring", stiffness: 200, damping: 20, delay: 0.5 + i * 0.1 }}
+            className="absolute group z-10"
+            style={{ left: `calc(50% + ${node.x}px)`, top: `calc(50% + ${node.y}px)`, x: "-50%", y: "-50%" }}
+            onClick={() => {
+              let type = 'Branding';
+              if (node.label === 'SOCIAL') type = 'Social Media';
+              if (node.label === 'PERFORMANCE') type = 'Performance Marketing';
+              if (node.label === 'DIGITAL') type = 'Website Development';
+              if (node.label === 'SOFTWARE') type = 'Software Development';
+              window.dispatchEvent(new CustomEvent('dealpost-contact', { detail: { type } }));
+            }}
           >
-            <div className="w-20 h-20 md:w-24 md:h-24 bg-white rounded-full flex items-center justify-center shadow-xl border border-[#138F84]/20 transition-all duration-300 group-hover:scale-110 group-hover:border-[#138F84] group-hover:shadow-[0_0_30px_rgba(19,143,132,0.2)]">
+            <div className="w-20 h-20 md:w-24 md:h-24 bg-white rounded-full flex items-center justify-center shadow-xl border border-[#138F84]/20 transition-all duration-300 group-hover:scale-110 group-hover:border-[#138F84] group-hover:shadow-[0_0_30px_rgba(19,143,132,0.2)] cursor-pointer">
               <span className="font-black text-[10px] md:text-xs tracking-widest text-[#061F1C] group-hover:text-[#138F84] transition-colors">{node.label}</span>
             </div>
             
@@ -602,6 +611,13 @@ function DealpostEngine() {
                 transition={{ duration: 0.8, delay: i * 0.15, type: "spring" }}
                 className="bg-[#061F1C] border border-[#138F84]/30 px-8 py-6 rounded-2xl w-full md:w-1/2 flex justify-between items-center group cursor-pointer hover:bg-white hover:text-[#061F1C] transition-colors duration-500"
                 data-cursor="hover"
+                onClick={() => {
+                  let type = 'Branding';
+                  if (step === 'PERFORMANCE' || step === 'DATA' || step === 'GROWTH') type = 'Performance Marketing';
+                  if (step === 'TECHNOLOGY') type = 'Software Development';
+                  if (step === 'CONTENT') type = 'Social Media';
+                  window.dispatchEvent(new CustomEvent('dealpost-contact', { detail: { type } }));
+                }}
               >
                 <span className="text-2xl font-black tracking-tight">{step}</span>
                 <div className="w-2 h-2 rounded-full bg-[#138F84] group-hover:scale-150 transition-transform" />
@@ -1021,6 +1037,17 @@ function Contact() {
   const [formData, setFormData] = useState({ name: "", email: "", type: "Performance Marketing", message: "" });
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const handleContactEvent = (e: CustomEvent) => {
+      if (e.detail?.type) {
+        setFormData(prev => ({ ...prev, type: e.detail.type }));
+        document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+      }
+    };
+    window.addEventListener('dealpost-contact' as any, handleContactEvent);
+    return () => window.removeEventListener('dealpost-contact' as any, handleContactEvent);
+  }, []);
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
