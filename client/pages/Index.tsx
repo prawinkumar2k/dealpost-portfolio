@@ -1222,12 +1222,9 @@ function Footer() {
 
 function Projects() {
   const projects = [
-    { title: "TIDEL", category: "REBRANDING / BRAND IDENTITY", desc: "Monogram, Wordmark, Business Cards, Signage, Digital Display, Uniform, Stationery, ID cards", image: "/project7.png", featured: true },
-    { title: "CHENNAI AEROSPACE PARK", category: "BRAND IDENTITY", desc: "Logo, Monogram, Wordmark, Brand system, Applications", image: "/project2.png", featured: true },
-    { title: "TAMIL NADU TOURISM", category: "BRAND IDENTITY / COMMUNICATION", desc: "Sketches, Logo concepts, Identity, Applications, Campaign work", image: "/project3.png", featured: true },
-    { title: "MADURAI SMART CITY", category: "PROJECT COMMUNICATION", desc: "Brand Identity, Strategy, Applications", image: "/project14.png", featured: true },
-    { title: "KINGSFORD", category: "BRANDING & DIGITAL", desc: "Branding, Brochure, Marketing, Campaign, Website, Digital experience", image: "/project8.png", featured: false },
-    { title: "VALENCIA", category: "IDENTITY & MARKETING", desc: "Identity, Fingerprint/heart concept, Brochure, Marketing collateral", image: "/project10.png", featured: false },
+    { title: "TIDEL", category: "Brand Identity, Strategy", image: "/pdf_img_8.jpeg", featured: true, desc: "A comprehensive brand narrative encompassing Logo, Monogram, Wordmark, Business Cards, Signage, and ID cards." },
+    { title: "CHENNAI AEROSPACE PARK", category: "Strategy, Brand Implementation", image: "/pdf_img_14.jpeg", featured: false },
+    { title: "KARI KALAM", category: "IDENTITY & MARKETING", desc: "Identity, Traditional Concept", image: "/pdf_img_17.png", featured: false },
     { title: "KOVAI KONGU MESS", category: "RESTAURANT BRANDING", desc: "Logo design, Mascot, Brand colors", image: "/project1.png", featured: false },
     { title: "FOODBAE", category: "RESTAURANT BRANDING", desc: "Logo, Packaging, Marketing Collateral", image: "/project4.png", featured: false },
     { title: "ARENA SPORTS & RESORT", category: "LEISURE BRANDING", desc: "Visual identity, Resort branding", image: "/project5.jpeg", featured: false },
@@ -1300,31 +1297,33 @@ function Projects() {
 
 function Clients() {
   const clientsData = [
-    { name: "TIDEL", type: "Technology Park", image: "/project7.png" },
-    { name: "CHENNAI AEROSPACE PARK", type: "Government", image: "/project2.png" },
-    { name: "MADURAI CORPORATION", type: "Government", image: "/project14.png" },
-    { name: "MADURAI SMART CITY", type: "Government", image: "/project15.png" },
-    { name: "TAMIL NADU TOURISM (TTDC)", type: "Government / Tourism", image: "/project3.png" },
-    { name: "Kovai Kongu Mess", type: "Restaurant / Hospitality", image: "/project1.png" },
+    { name: "TIDEL", type: "Technology Park", image: "/pdf_img_3.jpeg" },
+    { name: "CHENNAI AEROSPACE PARK", type: "Government", image: "/pdf_img_13.png" },
+    { name: "KOVAI KONGU MESS", type: "Restaurant / Hospitality", image: "/project1.png" },
+    { name: "KAMARAJAR EDUCATIONAL TRUST", type: "Education", image: "/project2.png" },
+    { name: "ACTS School", type: "Education", image: "/project3.png" },
     { name: "FOODBAE", type: "Food & Beverage", image: "/project4.png" },
     { name: "Arena Sports & Resort", type: "Sports & Leisure", image: "/project5.jpeg" },
     { name: "CanvasWorkspace", type: "Software & Technology", image: "/project6.png" },
+    { name: "Bangalore Dev Authority", type: "Government", image: "/project7.png" },
     { name: "Suraksha Group", type: "Real Estate", image: "/project8.png" },
     { name: "Lux", type: "Fashion & Lifestyle", image: "/project9.png" },
     { name: "Sri Mahalaxmi Jewellers", type: "Retail & Jewelry", image: "/project10.png" },
     { name: "Nano Hospitals", type: "Healthcare", image: "/project11.png" },
     { name: "Regal Hospital", type: "Healthcare", image: "/project12.png" },
     { name: "SST Global", type: "Corporate / Logistics", image: "/project13.png" },
+    { name: "Regal Jewellers", type: "Retail & Jewelry", image: "/project14.png" },
+    { name: "Blossoms", type: "Apparel", image: "/project15.png" },
     { name: "eterneD", type: "Retail & Jewelry", image: "/project16.png" },
     { name: "PEEPAI Brewery & Kitchen", type: "Food & Beverage", image: "/project17.png" },
     { name: "m5 Ecity", type: "Real Estate", image: "/project18.png" },
     { name: "ATHLETEFIT", type: "Health & Fitness", image: "/project19.png" },
-    { name: "ACTS School", type: "Education", image: "/project20.png" },
     { name: "INDIQUBE", type: "Workspace & Corporate", image: "/project21.png" },
     { name: "Nandus", type: "Retail & FMCG", image: "/project22.png" },
     { name: "Supertails", type: "Retail & E-commerce", image: "/project23.png" },
     { name: "Hillrock National Public School", type: "Education", image: "/project24.png" },
-    { name: "Raj Fashion Academy", type: "Education", image: "/project25.png" }
+    { name: "Raj Fashion Academy", type: "Education", image: "/project25.png" },
+    { name: "ORALDNA LABS", type: "Healthcare", image: "/project26.png" }
   ];
 
   return (
