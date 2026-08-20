@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, type ReactNode } from "react";
-import { ArrowUpRight, Menu, X, Play, Volume2, Monitor, Code, Database, Layout } from "lucide-react";
+import { ArrowUpRight, Menu, X, Play, Volume2, Monitor, Code, Database, Layout, Zap, Share2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion, useScroll, useTransform, AnimatePresence, useSpring, useInView } from "framer-motion";
 import Lenis from "lenis";
@@ -650,60 +650,183 @@ function ContentMultiplication() {
   );
 }
 
-function Technology() {
+function SoftwareDevelopment() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start center", "end start"]
+  });
+
   return (
-    <section id="technology" className="py-32 px-6 md:px-10 lg:px-[58px] bg-[#061F1C] text-white">
-      <div className="max-w-[1400px] mx-auto">
+    <section ref={containerRef} id="technology" className="py-32 px-6 md:px-10 lg:px-[58px] bg-[#061F1C] text-white overflow-hidden relative min-h-[120vh] flex flex-col justify-center">
+      <div className="max-w-[1400px] mx-auto w-full">
         <Reveal>
-          <span className="text-[10px] uppercase tracking-widest font-bold text-[#138F84]">04 / TECHNOLOGY</span>
+          <span className="text-[10px] uppercase tracking-widest font-bold text-[#138F84]">05 / TECHNOLOGY & SOFTWARE</span>
           <h2 className="text-5xl md:text-8xl font-black tracking-tighter leading-none mt-4 mb-16">
             WE DON'T JUST<br />DESIGN SOFTWARE.<br />
             <em className="text-[#138F84] not-italic">WE BUILD IT.</em>
           </h2>
         </Reveal>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-          <Reveal delay={0.2} className="relative h-[400px] flex items-center">
-            {/* Tech Assembly Animation */}
-            <div className="flex flex-col gap-4 text-2xl font-black tracking-tighter w-full">
-              {[
-                { name: "IDEA", icon: <Monitor size={20} /> },
-                { name: "DESIGN", icon: <Layout size={20} /> },
-                { name: "FRONTEND", icon: <Code size={20} /> },
-                { name: "BACKEND", icon: <Database size={20} /> }
-              ].map((step, i) => (
-                <motion.div 
-                  key={step.name}
-                  initial={{ opacity: 0, x: -50 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.2 + i * 0.2 }}
-                  className="flex items-center gap-6"
-                >
-                  <div className="w-12 h-12 rounded-full bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] flex items-center justify-center text-[#138F84]">
-                    {step.icon}
-                  </div>
-                  <span>{step.name}</span>
-                  {i !== 3 && <div className="flex-1 h-[1px] bg-gradient-to-r from-[rgba(255,255,255,0.1)] to-transparent" />}
-                </motion.div>
-              ))}
-            </div>
-          </Reveal>
+        <div className="flex flex-col lg:flex-row gap-8 items-stretch h-[600px] w-full mt-12">
           
-          <Reveal delay={0.4} className="flex flex-col justify-center">
-            <p className="text-xl font-medium opacity-80 mb-10">
-              From internal business tools to complete digital platforms, we design and develop software around real business workflows.
-            </p>
-            <div className="grid grid-cols-2 gap-6">
-              {[
-                "Web Applications", "CMS Development", "API Integration", "Database Systems", 
-                "E-commerce", "Admin Dashboards", "UI/UX Design", "Cloud Platforms"
-              ].map(s => (
-                <div key={s} className="flex flex-col border-b border-[rgba(255,255,255,0.1)] pb-4">
-                  <span className="text-sm font-bold uppercase tracking-widest">{s}</span>
-                </div>
-              ))}
+          {/* Left Side: Code Visual */}
+          <div className="hidden lg:flex w-[35%] bg-[#0A2A26] rounded-3xl border border-[rgba(255,255,255,0.05)] shadow-2xl p-6 flex-col overflow-hidden relative font-mono text-[10px] leading-relaxed text-[#138F84]">
+            <div className="flex items-center gap-2 mb-6 border-b border-[rgba(255,255,255,0.05)] pb-4">
+              <div className="w-3 h-3 rounded-full bg-red-500/50" />
+              <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
+              <div className="w-3 h-3 rounded-full bg-green-500/50" />
+              <span className="ml-4 opacity-50">terminal — build</span>
             </div>
-          </Reveal>
+            
+            <motion.div
+              initial={{ y: 50, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
+              <p className="text-white opacity-50">&gt; initializing dealpost application framework...</p>
+              <p className="text-white opacity-50">&gt; compiling assets...</p>
+            </motion.div>
+            
+            {[
+              "import { DashboardLayout } from '@dealpost/ui';",
+              "import { createAnalyticsEngine } from '@core/analytics';",
+              "",
+              "const engine = createAnalyticsEngine({",
+              "  mode: 'real-time',",
+              "  cache: true",
+              "});",
+              "",
+              "export default function App() {",
+              "  return (",
+              "    <DashboardLayout>",
+              "      <Sidebar metrics={engine.getMetrics()} />",
+              "      <MainContent>",
+              "        <DataVisualization />",
+              "      </MainContent>",
+              "    </DashboardLayout>",
+              "  );",
+              "}"
+            ].map((line, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, x: -10 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.8 + i * 0.1 }}
+                className="my-1 whitespace-pre"
+              >
+                {line}
+              </motion.div>
+            ))}
+
+            <motion.div
+              className="absolute bottom-0 left-0 w-full h-1/3 bg-gradient-to-t from-[#0A2A26] to-transparent pointer-events-none"
+            />
+          </div>
+
+          {/* Right Side: The Application Building Itself */}
+          <div className="w-full lg:w-[65%] bg-white rounded-3xl overflow-hidden relative flex shadow-2xl">
+            
+            {/* Sidebar */}
+            <motion.div 
+              initial={{ x: "-100%" }}
+              whileInView={{ x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, type: "spring", bounce: 0, delay: 2.5 }}
+              className="w-[20%] h-full border-r border-gray-100 bg-gray-50 flex flex-col p-4 z-20 absolute lg:relative"
+            >
+              <div className="w-8 h-8 rounded-full bg-[#061F1C] mb-8" />
+              {[...Array(5)].map((_, i) => (
+                <div key={i} className="w-full h-3 bg-gray-200 rounded-full mb-4 opacity-50" />
+              ))}
+            </motion.div>
+
+            {/* Main Area */}
+            <div className="flex-1 flex flex-col bg-white h-full relative z-10 w-full pl-[20%] lg:pl-0">
+              
+              {/* Header */}
+              <motion.div 
+                initial={{ y: "-100%" }}
+                whileInView={{ y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, type: "spring", bounce: 0, delay: 3 }}
+                className="h-16 border-b border-gray-100 flex items-center px-8 justify-between"
+              >
+                <div className="w-32 h-4 bg-gray-100 rounded-full" />
+                <div className="w-8 h-8 rounded-full bg-gray-100" />
+              </motion.div>
+
+              {/* Dashboard Content */}
+              <div className="p-8 flex-1 flex flex-col gap-6">
+                
+                {/* KPI Cards */}
+                <div className="grid grid-cols-3 gap-6 h-24">
+                  {[...Array(3)].map((_, i) => (
+                    <motion.div 
+                      key={i}
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: 3.5 + i * 0.15 }}
+                      className="bg-gray-50 rounded-xl border border-gray-100 p-4 flex flex-col justify-between"
+                    >
+                      <div className="w-16 h-2 bg-gray-200 rounded-full mb-4" />
+                      <div className="w-24 h-6 bg-[#138F84]/20 rounded-full" />
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Main Chart Area */}
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: 4.2 }}
+                  className="flex-1 bg-gray-50 rounded-xl border border-gray-100 p-6 flex flex-col relative overflow-hidden"
+                >
+                  <div className="w-32 h-3 bg-gray-200 rounded-full mb-8" />
+                  
+                  {/* Fake Bar Chart */}
+                  <div className="flex-1 flex items-end gap-2 justify-between">
+                    {[40, 70, 45, 90, 65, 100, 85].map((h, i) => (
+                      <motion.div 
+                        key={i}
+                        initial={{ height: 0 }}
+                        whileInView={{ height: `${h}%` }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 1, delay: 4.5 + i * 0.1, type: "spring" }}
+                        className="w-full bg-[#138F84] rounded-t-md opacity-80"
+                      />
+                    ))}
+                  </div>
+                </motion.div>
+
+              </div>
+            </div>
+            
+            {/* Reveal Overlay */}
+            <motion.div 
+              className="absolute inset-0 bg-[#138F84] z-50 flex items-center justify-center"
+              initial={{ scaleX: 1 }}
+              whileInView={{ scaleX: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1.2, delay: 1.5, ease: [0.76, 0, 0.24, 1] }}
+              style={{ transformOrigin: "right" }}
+            >
+              <motion.span 
+                initial={{ opacity: 1 }}
+                whileInView={{ opacity: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.2, delay: 1.3 }}
+                className="text-white font-black tracking-widest text-sm"
+              >
+                COMPILING...
+              </motion.span>
+            </motion.div>
+
+          </div>
         </div>
       </div>
     </section>
@@ -909,46 +1032,63 @@ function Projects() {
     { title: "NANO HOSPITALS", category: "HEALTHCARE BRANDING", desc: "Logo, Identity System", image: "/project11.png", featured: false },
   ];
 
-  return (
-    <section id="work" className="py-32 px-6 md:px-10 lg:px-[58px] bg-[#F3FAF7] text-[#061F1C] overflow-hidden">
-      <div className="max-w-[1400px] mx-auto mb-20">
-        <Reveal>
-          <span className="text-[10px] uppercase tracking-widest font-bold text-[#126F65]">10 / SELECTED WORK</span>
-          <h2 className="text-6xl md:text-8xl lg:text-[120px] font-black tracking-tighter leading-[0.85] mt-4 mb-8">
-            PROOF<br />
-            IS IN THE<br />
-            <em className="text-[#138F84] not-italic">WORK.</em>
-          </h2>
-        </Reveal>
-      </div>
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+  });
+  
+  // Calculate horizontal translation based on number of projects to ensure full scrolling
+  const x = useTransform(scrollYProgress, [0, 1], ["0%", "-85%"]);
 
-      <div className="relative flex flex-nowrap items-center w-[400vw] md:w-auto overflow-x-auto pb-12 hide-scrollbar px-6 md:px-10 lg:px-[58px] gap-8">
-        {projects.map((project, i) => (
-          <motion.div 
-            key={project.title}
-            initial={{ opacity: 0, x: 100 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: i * 0.1 }}
-            className={`flex-shrink-0 ${project.featured ? 'w-[400px] md:w-[650px]' : 'w-[300px] md:w-[450px]'} group cursor-pointer`}
-          >
-            <div className={`aspect-[4/5] rounded-[30px] p-8 flex flex-col justify-between mb-8 shadow-md transition-all duration-500 group-hover:-translate-y-4 relative overflow-hidden bg-[#0E544C] ${project.featured ? 'ring-4 ring-[#138F84] shadow-[0_0_40px_rgba(19,143,132,0.3)]' : ''}`}>
-              <div className="absolute inset-0 bg-cover bg-center opacity-80 transition-transform duration-1000 group-hover:scale-110" style={{ backgroundImage: `url(${project.image})` }} />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#061F1C] via-[#061F1C]/40 to-transparent opacity-90" />
-              <div className="relative z-10 flex justify-between items-start text-white">
-                <span className={`text-[10px] font-bold uppercase tracking-widest ${project.featured ? 'px-3 py-1 bg-[#138F84] rounded-full' : 'opacity-90'}`}>
-                  {project.featured ? '⭐ FLAGSHIP CASE STUDY' : 'CASE STUDY'}
-                </span>
-                <ArrowUpRight size={project.featured ? 32 : 24} className={`opacity-0 group-hover:opacity-100 transition-opacity ${project.featured ? 'text-white' : 'text-[#138F84]'}`} />
-              </div>
-              <div className="relative z-10 text-white">
-                <h3 className={`${project.featured ? 'text-4xl md:text-7xl' : 'text-3xl md:text-5xl'} font-black tracking-tighter leading-none mb-4 uppercase drop-shadow-lg`}>{project.title}</h3>
-                <div className={`text-[10px] md:text-xs uppercase font-bold tracking-widest ${project.featured ? 'text-white' : 'text-[#138F84]'} mb-2`}>{project.category}</div>
-                <p className={`${project.featured ? 'text-base opacity-100' : 'text-sm opacity-80'} font-medium`}>{project.desc}</p>
+  return (
+    <section ref={containerRef} id="work" className="relative h-[600vh] bg-[#F3FAF7] text-[#061F1C]">
+      <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden pt-12 pb-12">
+        
+        <div className="px-6 md:px-10 lg:px-[58px] mb-12 shrink-0">
+          <Reveal>
+            <span className="text-[10px] uppercase tracking-widest font-bold text-[#126F65]">06 / SELECTED WORK</span>
+            <h2 className="text-6xl md:text-8xl lg:text-[100px] font-black tracking-tighter leading-[0.85] mt-4">
+              PROOF<br />
+              IS IN THE <em className="text-[#138F84] not-italic">WORK.</em>
+            </h2>
+          </Reveal>
+        </div>
+
+        <motion.div style={{ x }} className="flex gap-16 px-6 md:px-10 lg:px-[58px] w-max items-center h-full max-h-[70vh]">
+          {projects.map((project, i) => (
+            <div 
+              key={project.title}
+              className={`flex-shrink-0 ${project.featured ? 'w-[75vw] md:w-[60vw]' : 'w-[50vw] md:w-[40vw]'} h-full group relative`}
+              data-cursor="explore"
+            >
+              <div className={`w-full h-full rounded-[40px] p-8 md:p-12 flex flex-col justify-end shadow-2xl relative overflow-hidden bg-[#0E544C] ${project.featured ? 'ring-4 ring-[#138F84] shadow-[0_0_60px_rgba(19,143,132,0.4)]' : ''}`}>
+                <div className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-105" style={{ backgroundImage: `url(${project.image})` }} />
+                
+                <div className="absolute inset-0 bg-gradient-to-t from-[#061F1C] via-[#061F1C]/40 to-transparent opacity-90 transition-opacity duration-500 group-hover:opacity-70" />
+                
+                <div className="absolute top-8 md:top-12 right-8 md:right-12 z-10 flex justify-end text-white">
+                  <ArrowUpRight size={project.featured ? 48 : 32} className={`opacity-0 -translate-x-4 translate-y-4 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-500 ${project.featured ? 'text-white' : 'text-[#138F84]'}`} />
+                </div>
+                
+                <div className="relative z-10 text-white transform transition-transform duration-500 group-hover:-translate-y-4">
+                  <span className={`inline-block text-[10px] md:text-xs font-bold uppercase tracking-widest mb-6 ${project.featured ? 'px-4 py-2 bg-[#138F84] rounded-full' : 'opacity-90'}`}>
+                    {project.featured ? '⭐ FLAGSHIP CASE STUDY' : 'CASE STUDY'}
+                  </span>
+                  
+                  <h3 className={`${project.featured ? 'text-5xl md:text-8xl' : 'text-4xl md:text-6xl'} font-black tracking-tighter leading-none mb-6 uppercase drop-shadow-2xl`}>{project.title}</h3>
+                  <div className={`text-xs md:text-sm uppercase font-bold tracking-widest ${project.featured ? 'text-white' : 'text-[#138F84]'} mb-4`}>{project.category}</div>
+                  
+                  {project.featured && (
+                    <p className="text-lg md:text-2xl font-medium max-w-2xl opacity-90 drop-shadow-md">
+                      {project.desc}
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
-          </motion.div>
-        ))}
+          ))}
+        </motion.div>
+        
       </div>
     </section>
   );
@@ -1078,7 +1218,7 @@ export default function Index() {
       <Ecosystem />
       <DealpostEngine />
       <ContentMultiplication />
-      <Technology />
+      <SoftwareDevelopment />
       <Podcast />
       <Projects />
       <Clients />
