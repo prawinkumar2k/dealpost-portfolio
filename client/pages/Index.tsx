@@ -184,7 +184,7 @@ function Loader() {
   const [loading, setLoading] = useState(true);
   
   useEffect(() => {
-    const t = setTimeout(() => setLoading(false), 1500);
+    const t = setTimeout(() => setLoading(false), 2200);
     return () => clearTimeout(t);
   }, []);
 
@@ -192,33 +192,53 @@ function Loader() {
     <AnimatePresence>
       {loading && (
         <motion.div
-          exit={{ opacity: 0, y: "-100%" }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#0E544C]"
+          exit={{ opacity: 0, y: "-100%", scale: 1.1 }}
+          transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
+          className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#061F1C] overflow-hidden"
         >
+          {/* Geometric Expansion */}
+          <motion.div
+            initial={{ scale: 0, opacity: 0, rotate: 0 }}
+            animate={{ scale: [0, 1, 50], opacity: [0, 1, 0], rotate: [0, 45, 90] }}
+            transition={{ duration: 1.8, ease: "easeInOut" }}
+            className="absolute w-32 h-32 border border-[#138F84]/50 pointer-events-none"
+          />
+
           <motion.img 
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, scale: 0.8, filter: "blur(10px)" }}
+            animate={{ opacity: [0, 1, 0], scale: [0.8, 1, 1.2], filter: ["blur(10px)", "blur(0px)", "blur(10px)"] }}
+            transition={{ duration: 1.2, ease: "easeInOut" }}
             src={dealpostLogo} 
             alt="Dealpost" 
-            className="h-16 mb-8 filter brightness-0 invert" 
+            className="absolute h-16 filter brightness-0 invert" 
           />
-          <div className="overflow-hidden h-6">
-            <motion.h1 
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              className="text-white tracking-[0.3em] font-black uppercase text-xl"
+          
+          <div className="absolute flex flex-col items-center justify-center text-white font-black uppercase tracking-[0.3em] text-2xl md:text-5xl drop-shadow-2xl">
+            <motion.span 
+              initial={{ opacity: 0, y: 20, filter: "blur(5px)" }}
+              animate={{ opacity: [0, 1, 0], y: [20, 0, -20], filter: ["blur(5px)", "blur(0px)", "blur(5px)"] }}
+              transition={{ duration: 0.6, delay: 0.9 }}
+              className="absolute whitespace-nowrap"
             >
-              Dealpost
-            </motion.h1>
+              CREATIVE
+            </motion.span>
+            <motion.span 
+              initial={{ opacity: 0, y: 20, filter: "blur(5px)" }}
+              animate={{ opacity: [0, 1, 0], y: [20, 0, -20], filter: ["blur(5px)", "blur(0px)", "blur(5px)"] }}
+              transition={{ duration: 0.6, delay: 1.2 }}
+              className="absolute whitespace-nowrap text-[#138F84]"
+            >
+              MARKETING
+            </motion.span>
+            <motion.span 
+              initial={{ opacity: 0, y: 20, filter: "blur(5px)" }}
+              animate={{ opacity: [0, 1, 0], y: [20, 0, -20], filter: ["blur(5px)", "blur(0px)", "blur(5px)"] }}
+              transition={{ duration: 0.6, delay: 1.5 }}
+              className="absolute whitespace-nowrap"
+            >
+              TECHNOLOGY
+            </motion.span>
           </div>
-          <motion.div 
-            initial={{ width: 0 }}
-            animate={{ width: "200px" }}
-            transition={{ duration: 1, delay: 0.2, ease: "easeInOut" }}
-            className="h-[1px] bg-[var(--accent)] mt-6"
-            style={{ backgroundColor: theme.accent }}
-          />
         </motion.div>
       )}
     </AnimatePresence>
@@ -333,41 +353,106 @@ function Hero() {
   );
 }
 
-function Intro() {
-  return (
-    <section id="about" className="py-32 px-6 md:px-10 lg:px-[58px] bg-[#F3FAF7] text-[#061F1C]">
-      <div className="max-w-[1400px] mx-auto">
-        <div className="flex justify-between text-[10px] uppercase tracking-[0.2em] font-bold text-[#126F65] mb-20 border-b border-[rgba(14,84,76,0.1)] pb-4">
-          <span>01 / DEALPOST</span>
-          <span>WHO WE ARE</span>
-        </div>
-        
-        <Reveal>
-          <h2 className="text-5xl md:text-7xl lg:text-[100px] font-black tracking-tighter leading-[0.9] mb-24">
-            GREAT DESIGN<br />
-            HAS CREATIVITY<br />
-            <em className="text-[#138F84] not-italic">AND STRATEGY.</em>
-          </h2>
-        </Reveal>
+function BrandingTransformation() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  
+  const steps = [
+    { label: "BLANK CANVAS", icon: <Layout size={24} /> },
+    { label: "LOGO", icon: <Code size={24} /> },
+    { label: "COLOUR", icon: <Play size={24} /> },
+    { label: "TYPOGRAPHY", icon: <Menu size={24} /> },
+    { label: "STATIONERY", icon: <Database size={24} /> },
+    { label: "PACKAGING", icon: <Monitor size={24} /> },
+    { label: "SOCIAL POST", icon: <Share2 size={24} /> },
+    { label: "SIGNAGE", icon: <Monitor size={24} /> },
+    { label: "COMPLETE BRAND", icon: <Zap size={24} /> }
+  ];
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 lg:gap-32">
-          <Reveal delay={0.2}>
-            <p className="text-2xl md:text-4xl font-bold tracking-tight leading-tight">
-              At Dealpost, creativity isn't created in isolation.
+  return (
+    <section ref={containerRef} id="about" className="py-32 px-6 md:px-10 lg:px-[58px] bg-[#F3FAF7] text-[#061F1C] relative overflow-hidden min-h-[120vh] flex flex-col justify-center">
+      <div className="max-w-[1400px] mx-auto w-full">
+        
+        <div className="flex flex-col lg:flex-row gap-16 items-center justify-between mb-24">
+          <Reveal className="max-w-2xl">
+            <span className="text-[10px] uppercase tracking-widest font-bold text-[#126F65]">01 / BRANDING</span>
+            <h2 className="text-5xl md:text-7xl lg:text-[100px] font-black tracking-tighter leading-[0.9] mt-4 mb-8">
+              MAKE YOUR BRAND<br />
+              <em className="text-[#138F84] not-italic">RECOGNISABLE.</em>
+            </h2>
+            <p className="text-xl md:text-3xl font-bold tracking-tight leading-tight opacity-80">
+              A brand is more than a logo.
+            </p>
+            <p className="text-lg opacity-70 font-medium mt-6 max-w-xl">
+              We create visual systems that keep a business consistent across print, digital, social media, packaging, advertising, spaces and customer touchpoints.
             </p>
           </Reveal>
-          <Reveal delay={0.3} className="flex flex-col gap-8 text-lg opacity-80 font-medium">
-            <p>
-              We combine ideas, design, technology, content and strategy to create experiences that people notice, remember and act on.
-            </p>
-            <p>
-              From the first concept to the final campaign, we bring the thinking and execution together. Good ideas deserve great execution.
-            </p>
-            <div className="mt-8 p-8 bg-white rounded-2xl shadow-sm border border-[rgba(14,84,76,0.05)]">
-              <h4 className="text-[10px] uppercase tracking-widest font-bold text-[#138F84] mb-4">THE DIFFERENCE</h4>
-              <strong className="text-xl font-black tracking-tight leading-snug block">ONE PARTNER.<br/>MULTIPLE CAPABILITIES.<br/>ONE CLEAR DIRECTION.</strong>
-            </div>
+
+          <Reveal delay={0.3} className="hidden lg:grid grid-cols-2 gap-x-12 gap-y-4 text-sm font-bold tracking-widest uppercase opacity-60">
+            <span>Brand Strategy</span>
+            <span>Logo Design</span>
+            <span>Corporate Identity</span>
+            <span>Brand Guidelines</span>
+            <span>Typography</span>
+            <span>Colour Systems</span>
+            <span>Packaging</span>
+            <span>Marketing Collateral</span>
           </Reveal>
+        </div>
+
+        {/* The Animated Branding Journey */}
+        <div className="relative w-full bg-white rounded-[40px] shadow-2xl p-10 overflow-hidden border border-[#138F84]/10 h-[500px] flex items-center justify-center">
+          
+          <div className="absolute top-10 left-10 text-[10px] uppercase font-bold tracking-widest text-[#138F84]">
+            BRAND CONSTRUCTION SEQUENCE
+          </div>
+
+          {/* Central Animated Element */}
+          <div className="relative w-[300px] h-[300px] flex items-center justify-center">
+            <AnimatePresence>
+              {steps.map((step, index) => (
+                <motion.div
+                  key={step.label}
+                  initial={{ opacity: 0, scale: 0.5, rotate: -10 }}
+                  whileInView={{ opacity: [0, 1, 0], scale: [0.5, 1.2, 0.8], rotate: [-10, 0, 10] }}
+                  viewport={{ once: true, margin: "-200px" }}
+                  transition={{ 
+                    duration: 2, 
+                    delay: 0.5 + index * 1.5,
+                    times: [0, 0.5, 1],
+                    ease: "easeInOut"
+                  }}
+                  className="absolute inset-0 flex flex-col items-center justify-center text-center bg-[#F3FAF7] rounded-3xl shadow-xl border border-[#138F84]/20"
+                >
+                  <div className="w-16 h-16 rounded-full bg-[#061F1C] text-white flex items-center justify-center mb-6">
+                    {step.icon}
+                  </div>
+                  <span className="text-2xl font-black tracking-tight uppercase text-[#061F1C]">
+                    {step.label}
+                  </span>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+            
+            {/* Final State */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true, margin: "-200px" }}
+              transition={{ delay: 0.5 + steps.length * 1.5, duration: 1, type: "spring" }}
+              className="absolute inset-0 flex flex-col items-center justify-center text-center bg-[#061F1C] text-white rounded-3xl shadow-2xl ring-4 ring-[#138F84]"
+            >
+              <div className="w-20 h-20 rounded-full bg-[#138F84] text-white flex items-center justify-center mb-6 animate-pulse">
+                <img src={dealpostLogo} alt="DP" className="h-10 filter brightness-0 invert object-contain" />
+              </div>
+              <span className="text-3xl font-black tracking-tight uppercase">
+                COMPLETE<br/>BRAND
+              </span>
+            </motion.div>
+          </div>
+
+          {/* Decorative Elements */}
+          <div className="absolute -right-20 -bottom-20 w-64 h-64 bg-[#138F84] rounded-full opacity-10 blur-3xl pointer-events-none" />
+          <div className="absolute -left-20 -top-20 w-64 h-64 bg-[#126F65] rounded-full opacity-5 blur-3xl pointer-events-none" />
         </div>
       </div>
     </section>
@@ -833,33 +918,70 @@ function SoftwareDevelopment() {
   );
 }
 
-function Podcast() {
+function CompleteBusinessSolution() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"]
+  });
+
+  const steps = [
+    { label: "NEW BUSINESS IDEA", icon: <Zap size={24} />, top: "5%" },
+    { label: "BRANDING", icon: <Monitor size={24} />, top: "15%" },
+    { label: "MENU", icon: <Layout size={24} />, top: "25%" },
+    { label: "PACKAGING", icon: <Database size={24} />, top: "35%" },
+    { label: "PHOTOGRAPHY", icon: <Play size={24} />, top: "45%" },
+    { label: "SOCIAL MEDIA", icon: <Share2 size={24} />, top: "55%" },
+    { label: "WEBSITE", icon: <Code size={24} />, top: "65%" },
+    { label: "GOOGLE MAPS", icon: <Monitor size={24} />, top: "75%" },
+    { label: "LAUNCH CAMPAIGN", icon: <Zap size={24} />, top: "85%" },
+    { label: "GROWTH", icon: <ArrowUpRight size={24} />, top: "95%" },
+  ];
+
+  const yPos = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+
   return (
-    <section className="py-32 px-6 md:px-10 lg:px-[58px] bg-white text-[#061F1C] overflow-hidden">
-      <div className="max-w-[1400px] mx-auto text-center relative z-10">
-        <Reveal>
-          <span className="text-[10px] uppercase tracking-widest font-bold text-[#138F84]">05 / MEDIA</span>
-          <h2 className="text-5xl md:text-8xl font-black tracking-tighter leading-none mt-4 mb-8">
-            CONVERSATIONS<br />
-            WORTH<br />
-            LISTENING TO.
-          </h2>
-          <p className="max-w-xl mx-auto text-lg font-medium opacity-70 mb-16">
-            From the first conversation to the final clip, we help turn ideas and expertise into engaging audio and video content.
-          </p>
-        </Reveal>
+    <section ref={containerRef} id="complete-solution" className="bg-[#126F65] text-white py-32 px-6 md:px-10 lg:px-[58px] min-h-[300vh] relative">
+      <div className="sticky top-0 h-screen flex flex-col md:flex-row items-center justify-between gap-12 max-w-[1400px] mx-auto py-20">
         
-        {/* Waveform Animation */}
-        <div className="flex items-center justify-center gap-1 h-32">
-          {[...Array(40)].map((_, i) => (
-            <motion.div
-              key={i}
-              animate={{ height: ["20%", `${Math.random() * 80 + 20}%`, "20%"] }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut", delay: i * 0.05 }}
-              className="w-2 md:w-3 bg-[#0E544C] rounded-full"
-            />
-          ))}
+        <div className="w-full md:w-1/3 flex flex-col gap-6">
+          <Reveal>
+            <span className="text-[10px] uppercase tracking-widest font-bold text-[#138F84] mb-4 block">06 / THE COMPLETE SYSTEM</span>
+            <h2 className="text-5xl md:text-8xl font-black tracking-tighter leading-[0.9] uppercase">
+              THE FULL<br/>LIFECYCLE.
+            </h2>
+            <p className="text-lg font-medium opacity-80 mt-8">
+              We take a business from a simple idea to a launched brand with a full digital presence, automated marketing, and sustainable growth. This is the complete Dealpost Operating System.
+            </p>
+          </Reveal>
         </div>
+
+        <div className="w-full md:w-2/3 h-[70vh] relative border-l border-white/20 pl-10 md:pl-20 py-10 flex flex-col">
+          <motion.div 
+            className="absolute top-0 left-[-2px] w-[3px] bg-white h-[20%] shadow-[0_0_20px_white]"
+            style={{ top: yPos }}
+          />
+
+          <div className="relative h-full w-full">
+            {steps.map((step, i) => (
+              <motion.div 
+                key={step.label}
+                className="absolute flex items-center gap-6"
+                style={{ top: step.top }}
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.5 }}
+              >
+                <div className="w-12 h-12 rounded-full bg-[#061F1C] border border-[#138F84]/50 flex items-center justify-center text-[#138F84] shadow-xl">
+                  {step.icon}
+                </div>
+                <span className="text-xl md:text-3xl font-black tracking-tighter uppercase drop-shadow-md">{step.label}</span>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
       </div>
     </section>
   );
@@ -1214,12 +1336,12 @@ export default function Index() {
       <Loader />
       <Navigation />
       <Hero />
-      <Intro />
+      <BrandingTransformation />
       <Ecosystem />
       <DealpostEngine />
       <ContentMultiplication />
       <SoftwareDevelopment />
-      <Podcast />
+      <CompleteBusinessSolution />
       <Projects />
       <Clients />
       <Founder />
