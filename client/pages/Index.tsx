@@ -1,746 +1,804 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
-import { ArrowDown, ArrowUpRight, Menu, MoveUpRight, X } from "lucide-react";
+import { useEffect, useState, useRef, type ReactNode } from "react";
+import { ArrowUpRight, Menu, X, Play, Volume2, Monitor, Code, Database, Layout } from "lucide-react";
 import { Link } from "react-router-dom";
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence, useSpring, useInView } from "framer-motion";
 import Lenis from "lenis";
 
 const dealpostLogo = "https://cdn.builder.io/api/v1/image/assets%2F7ed07d18e9c74c61ae6c4e963ff0281d%2Fe77ecdba863d43509e2e5e0954c9337a?format=webp&width=800&height=1200";
 
-const serviceGroups = [
-  {
-    number: "01",
-    name: "Visual Identity & Branding",
-    descriptor: "Make it unmistakable.",
-    services: ["Logo Application", "Brand Consistency", "Business Cards & Letterheads", "Staff IDs & Uniforms", "Menu Design", "Stickers & Labels"],
-  },
-  {
-    number: "02",
-    name: "Marketing & Print Collateral",
-    descriptor: "Make it tangible.",
-    services: ["Brochures & Flyers", "Table Tent Cards", "QR Code Stands", "Thank You Cards", "Gift Vouchers", "Loyalty Cards"],
-  },
-  {
-    number: "03",
-    name: "Digital Presence & SEO",
-    descriptor: "Make it discoverable.",
-    services: ["Website Design", "Digital Menus", "Online Table Booking", "SEO Setup", "Google Maps Optimization", "Swiggy & Zomato Listings"],
-  },
-  {
-    number: "04",
-    name: "Social Media & Content",
-    descriptor: "Make it engaging.",
-    services: ["Instagram & Facebook Setup", "WhatsApp Business", "30 Monthly Videos & Reels", "Food & Interior Photography", "Chef & Team Portraits"],
-  },
-  {
-    number: "05",
-    name: "Campaigns & Promotions",
-    descriptor: "Make it launch.",
-    services: ["Teaser Campaigns", "Influencer Marketing", "Grand Opening Events", "Press Releases", "Paid Social Ads", "Offer & Festival Posters"],
-  },
-  {
-    number: "06",
-    name: "Packaging Production",
-    descriptor: "Make it physical.",
-    services: ["Paper Carry Bags", "Meal & Takeaway Boxes", "Coffee Sleeves & Paper Cups", "Tissue Paper", "Food Wrapping Paper", "Bottle & Sauce Labels"],
-  },
-];
+// Custom theme colors based on guidelines
+const theme = {
+  primary: "#0E544C",
+  secondary: "#126F65",
+  accent: "#138F84",
+  light: "#F3FAF7",
+  white: "#FFFFFF",
+  dark: "#061F1C"
+};
 
-const projects = [
-  { name: "Kovai Kongu Mess", category: "Restaurant Branding", tag: "01", art: "kovai", detail: "Logo design / mascot illustration / brand colors / restaurant branding", bg: "/project1.png" },
-  { name: "Kamarajar Educational Trust", category: "Project Branding", tag: "02", art: "aerospace", detail: "Logo / monogram / wordmark / identity system", bg: "/project2.png" },
-  { name: "A School of Difference", category: "Education Branding", tag: "03", art: "school", detail: "Identity / application / color palette / typography", bg: "/project3.png" },
-  { name: "FOODBAE", category: "Restaurant Branding", tag: "04", art: "foodbae", detail: "Logo / brand identity / packaging / marketing collateral", bg: "/project4.png" },
-  { name: "Arena Sports & Resort", category: "Leisure Branding", tag: "05", art: "arena", detail: "Logo / visual identity / resort branding / marketing materials", bg: "/project5.jpeg" },
-  { name: "CanvasWorkspace", category: "Software Branding", tag: "06", art: "canvas", detail: "Logo / application icon / identity system / UI design", bg: "/project6.png" },
-  { name: "Bangalore Development Authority", category: "Civic Branding", tag: "07", art: "bda", detail: "Identity / visual system", bg: "/project7.png" },
-  { name: "Suraksha Group", category: "Corporate Identity", tag: "08", art: "suraksha", detail: "Logo / brand identity / marketing collateral", bg: "/project8.png" },
-  { name: "Lux", category: "Brand Communication", tag: "09", art: "lux", detail: "Logo / application / typography", bg: "/project9.png" },
-  { name: "Sri Mahalaxmi Jewellers", category: "Retail Branding", tag: "10", art: "mahalaxmi", detail: "Logo / visual identity", bg: "/project10.png" },
-  { name: "Nano Hospitals", category: "Healthcare Branding", tag: "11", art: "nano", detail: "Logo / identity system", bg: "/project11.png" },
-  { name: "Regal Hospital", category: "Healthcare Branding", tag: "12", art: "regal", detail: "Logo / visual identity", bg: "/project12.png" },
-  { name: "SST Global", category: "Corporate Identity", tag: "13", art: "sst", detail: "Logo / branding / stationery", bg: "/project13.png" },
-  { name: "Regal Jewellers", category: "Retail Branding", tag: "14", art: "regaljewel", detail: "Logo / brand identity", bg: "/project14.png" },
-  { name: "Blossoms", category: "Retail Branding", tag: "15", art: "blossoms", detail: "Logo / visual system", bg: "/project15.png" },
-  { name: "eterneD", category: "Retail Branding", tag: "16", art: "eterned", detail: "Logo / brand identity", bg: "/project16.png" },
-  { name: "PEEPAI Brewery & Kitchen", category: "Restaurant Branding", tag: "17", art: "peepai", detail: "Logo / brand identity / packaging", bg: "/project17.png" },
-  { name: "m5 Ecity", category: "Real Estate Branding", tag: "18", art: "m5", detail: "Logo / visual identity", bg: "/project18.png" },
-  { name: "ATHLETEFIT", category: "Fitness Branding", tag: "19", art: "athletefit", detail: "Logo / brand identity", bg: "/project19.png" },
-  { name: "ACTS School", category: "Education Branding", tag: "20", art: "acts", detail: "Logo / visual system", bg: "/project20.png" },
-  { name: "INDIQUBE", category: "Corporate Branding", tag: "21", art: "indiqube", detail: "Logo / brand identity", bg: "/project21.png" },
-  { name: "Nandus", category: "Retail Branding", tag: "22", art: "nandus", detail: "Logo / brand identity", bg: "/project22.png" },
-  { name: "Supertails", category: "Pet Care Branding", tag: "23", art: "supertails", detail: "Logo / e-commerce identity", bg: "/project23.png" },
-  { name: "Hillrock National Public School", category: "Education Branding", tag: "24", art: "hillrock", detail: "Logo / institutional identity", bg: "/project24.png" },
-  { name: "Raj Fashion Academy", category: "Fashion Education", tag: "25", art: "rajfashion", detail: "Logo / visual system", bg: "/project25.png" },
-  { name: "Oral DNA Labs", category: "Healthcare Branding", tag: "26", art: "oraldna", detail: "Logo / brand identity", bg: "/project26.png" },
-];
+// --- REUSABLE COMPONENTS ---
 
-const clientsData = [
-  { name: "Kovai Kongu Mess", type: "Restaurant / Hospitality", image: "/project1.png" },
-  { name: "Kamarajar Educational Trust", type: "Education", image: "/project2.png" },
-  { name: "A School of Difference", type: "Education", image: "/project3.png" },
-  { name: "FOODBAE", type: "Food & Beverage", image: "/project4.png" },
-  { name: "Arena Sports & Resort", type: "Sports & Leisure", image: "/project5.jpeg" },
-  { name: "CanvasWorkspace", type: "Software & Technology", image: "/project6.png" },
-  { name: "Bangalore Development Authority", type: "Government", image: "/project7.png" },
-  { name: "Suraksha Group", type: "Real Estate", image: "/project8.png" },
-  { name: "Lux", type: "Fashion & Lifestyle", image: "/project9.png" },
-  { name: "Sri Mahalaxmi Jewellers", type: "Retail & Jewelry", image: "/project10.png" },
-  { name: "Nano Hospitals", type: "Healthcare", image: "/project11.png" },
-  { name: "Regal Hospital", type: "Healthcare", image: "/project12.png" },
-  { name: "SST Global", type: "Corporate / Logistics", image: "/project13.png" },
-  { name: "Regal Jewellers", type: "Retail & Jewelry", image: "/project14.png" },
-  { name: "Blossoms", type: "Retail / Bookstore", image: "/project15.png" },
-  { name: "eterneD", type: "Retail & Jewelry", image: "/project16.png" },
-  { name: "PEEPAI Brewery & Kitchen", type: "Food & Beverage", image: "/project17.png" },
-  { name: "m5 Ecity", type: "Real Estate", image: "/project18.png" },
-  { name: "ATHLETEFIT", type: "Health & Fitness", image: "/project19.png" },
-  { name: "ACTS School", type: "Education", image: "/project20.png" },
-  { name: "INDIQUBE", type: "Workspace & Corporate", image: "/project21.png" },
-  { name: "Nandus", type: "Retail & FMCG", image: "/project22.png" },
-  { name: "Supertails", type: "Retail & E-commerce", image: "/project23.png" },
-  { name: "Hillrock National Public School", type: "Education", image: "/project24.png" },
-  { name: "Raj Fashion Academy", type: "Education", image: "/project25.png" },
-  { name: "Oral DNA Labs", type: "Healthcare", image: "/project26.png" },
-];
-
-function SectionLink({ id, children, className = "", onClick }: { id: string; children: ReactNode; className?: string; onClick?: () => void }) {
-  const handleClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    onClick?.();
-    const target = document.getElementById(id);
-    if (target) {
-      target.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-  return <a href={`#${id}`} className={className} onClick={handleClick}>{children}</a>;
-}
-
-function Logo({ light = false }: { light?: boolean }) {
-  return <SectionLink id="top" className={`dealpost-logo ${light ? "dealpost-logo-light" : ""}`}><img src={dealpostLogo} alt="Dealpost" /></SectionLink>;
-}
-
-// Upgraded Reveal using Framer Motion
-function Reveal({ children, className = "", delay = 0, yOffset = 40 }: { children: ReactNode; className?: string; delay?: number; yOffset?: number }) {
+function Reveal({ children, delay = 0, className = "" }: { children: ReactNode; delay?: number; className?: string }) {
   return (
     <motion.div
-      className={className}
-      initial={{ opacity: 0, y: yOffset, filter: "blur(4px)" }}
-      whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-10%" }}
-      transition={{ duration: 1.1, delay, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] }}
+      className={className}
     >
       {children}
     </motion.div>
   );
 }
 
-
-// Infinite auto-scrolling marquee
-function InfiniteMarquee({ text, speed = 30 }: { text: string; speed?: number }) {
-  // Repeat text enough times to fill screen width seamlessly
-  const items = Array(8).fill(text);
+function SectionLink({ id, children, className = "", onClick }: { id: string; children: ReactNode; className?: string; onClick?: () => void }) {
   return (
-    <div className="overflow-hidden whitespace-nowrap py-16 pointer-events-none select-none border-y border-[rgba(212,175,55,0.12)]">
-      <motion.div
-        className="flex gap-0 font-black tracking-tighter uppercase w-max"
-        style={{ fontSize: "clamp(32px, 6vw, 80px)", color: "var(--teal)", opacity: 0.18 }}
-        animate={{ x: ["0%", "-50%"] }}
-        transition={{ duration: speed, ease: "linear", repeat: Infinity }}
-      >
-        {/* Duplicate set so it loops seamlessly */}
-        {[...items, ...items].map((t, i) => (
-          <span key={i} className="px-12">{t} <span className="text-[var(--ink)] opacity-40 mx-4">✦</span></span>
-        ))}
-      </motion.div>
-    </div>
+    <a
+      href={`#${id}`}
+      onClick={(e) => {
+        e.preventDefault();
+        document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+        if (onClick) onClick();
+      }}
+      className={`cursor-pointer ${className}`}
+    >
+      {children}
+    </a>
   );
 }
 
+// --- SECTIONS ---
 
-function CursorFollower() {
-  const [position, setPosition] = useState({ x: -100, y: -100 });
-  const [label, setLabel] = useState("");
+function Loader() {
+  const [loading, setLoading] = useState(true);
+  
   useEffect(() => {
-    if (!window.matchMedia("(pointer: fine)").matches) return;
-    const move = (event: MouseEvent) => {
-      setPosition({ x: event.clientX, y: event.clientY });
-      const target = event.target as HTMLElement | null;
-      setLabel(target?.closest("[data-cursor]")?.getAttribute("data-cursor") ?? "");
-    };
-    window.addEventListener("mousemove", move);
-    return () => window.removeEventListener("mousemove", move);
+    const t = setTimeout(() => setLoading(false), 1500);
+    return () => clearTimeout(t);
   }, []);
+
   return (
-    <motion.div 
-      className={`cursor-follower ${label ? "cursor-active" : ""}`} 
-      animate={{ left: position.x, top: position.y }}
-      transition={{ type: "spring", stiffness: 400, damping: 28, mass: 0.5 }}
-    >
-      {label}
-    </motion.div>
+    <AnimatePresence>
+      {loading && (
+        <motion.div
+          exit={{ opacity: 0, y: "-100%" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#0E544C]"
+        >
+          <motion.img 
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            src={dealpostLogo} 
+            alt="Dealpost" 
+            className="h-16 mb-8 filter brightness-0 invert" 
+          />
+          <div className="overflow-hidden h-6">
+            <motion.h1 
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              className="text-white tracking-[0.3em] font-black uppercase text-xl"
+            >
+              Dealpost
+            </motion.h1>
+          </div>
+          <motion.div 
+            initial={{ width: 0 }}
+            animate={{ width: "200px" }}
+            transition={{ duration: 1, delay: 0.2, ease: "easeInOut" }}
+            className="h-[1px] bg-[var(--accent)] mt-6"
+            style={{ backgroundColor: theme.accent }}
+          />
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
 
-function MagneticLink({ id, children, className = "" }: { id: string; children: ReactNode; className?: string }) {
-  const [shift, setShift] = useState({ x: 0, y: 0 });
-  return <SectionLink id={id} className={`magnetic-link ${className}`} onClick={() => setShift({ x: 0, y: 0 })}>
-    <motion.span 
-      onMouseMove={(event) => { const rect = event.currentTarget.getBoundingClientRect(); setShift({ x: (event.clientX - rect.left - rect.width / 2) * 0.25, y: (event.clientY - rect.top - rect.height / 2) * 0.25 }); }} 
-      onMouseLeave={() => setShift({ x: 0, y: 0 })} 
-      animate={{ x: shift.x, y: shift.y }}
-      transition={{ type: "spring", stiffness: 300, damping: 20 }}
-      className="inline-flex items-center gap-2"
-    >
-      {children}
-    </motion.span>
-  </SectionLink>;
-}
-
-function ProjectArt({ project, large = false }: { project: (typeof projects)[number]; large?: boolean }) {
+function Hero() {
+  const words = ["REEL", "AD", "CLICK", "LEAD", "BRAND", "WEBSITE", "SOFTWARE", "PODCAST"];
+  
   return (
-    <div className={`relative overflow-hidden project-art aspect-square ${large ? "md:aspect-[1.2]" : ""} rounded-sm group`} style={{ backgroundColor: 'var(--ink)' }}>
-      <div className="absolute inset-0 bg-cover bg-center opacity-40 mix-blend-overlay transition-transform duration-1000 group-hover:scale-110" style={{ backgroundImage: `url(${project.bg})` }} />
-      <div className="absolute inset-0 art-grid opacity-20" />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#042116] via-transparent to-transparent opacity-80" />
-      
-      <div className="absolute bottom-6 left-6 right-6 z-10 flex flex-col justify-end">
-         <span className="text-[var(--teal)] text-xs font-bold tracking-widest uppercase mb-2">{project.tag} / 05</span>
-         <h3 className="text-4xl lg:text-6xl font-black text-white tracking-tight mb-2 group-hover:text-[var(--teal)] transition-colors">{project.name}</h3>
-         <p className="text-[var(--mint)] opacity-70 text-sm">{project.category}</p>
-      </div>
-    </div>
-  );
-}
-
-
-function WorkRail() {
-  const [active, setActive] = useState(0);
-  const total = projects.length;
-
-  // Auto-advance every 3 seconds
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setActive(prev => (prev + 1) % total);
-    }, 3000);
-    return () => clearInterval(timer);
-  }, [total]);
-
-  const prev = () => setActive(a => (a - 1 + total) % total);
-  const next = () => setActive(a => (a + 1) % total);
-
-  return (
-    <section id="work" className="py-32 bg-[var(--ink)] text-[var(--mint)] relative overflow-hidden">
-      {/* Header */}
-      <div className="px-6 md:px-10 lg:px-[58px] mb-16">
-        <span className="text-[9px] uppercase tracking-[0.15em] font-bold text-[var(--teal)]">05 / Selected work</span>
-        <h2 className="text-5xl md:text-7xl font-black tracking-tighter mt-4 leading-none">
-          Work<br /><em className="text-[var(--teal)] not-italic">that</em><br />speaks<span className="text-[var(--teal)]">.</span>
-        </h2>
-      </div>
-
-      {/* Carousel */}
-      <div className="relative">
-        <div className="overflow-hidden">
+    <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#0E544C] text-white pt-24 px-6 md:px-10 lg:px-[58px]">
+      <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-20">
+        {words.map((word, i) => (
           <motion.div
-            className="flex"
-            animate={{ x: `-${active * 100}%` }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            key={i}
+            animate={{ 
+              y: ["-20%", "20%"], 
+              x: i % 2 === 0 ? ["-10%", "10%"] : ["10%", "-10%"],
+              rotate: i % 2 === 0 ? [0, 5, -5, 0] : [0, -5, 5, 0]
+            }}
+            transition={{ duration: 8 + i * 2, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
+            className="absolute font-black text-4xl md:text-6xl lg:text-8xl tracking-tighter text-[#138F84] mix-blend-screen opacity-30"
+            style={{ 
+              top: `${Math.random() * 80 + 10}%`, 
+              left: `${Math.random() * 80 + 10}%` 
+            }}
           >
-            {projects.map((project, index) => (
-              <div key={project.name} className="w-full flex-shrink-0 px-6 md:px-10 lg:px-[58px]">
-                <div className="grid md:grid-cols-2 gap-12 items-center min-h-[60vh]">
-                  {/* Project image */}
-                  <motion.div
-                    className="relative overflow-hidden rounded-xl aspect-[4/3] group cursor-pointer"
-                    whileHover={{ scale: 1.02 }}
-                    transition={{ duration: 0.4 }}
-                    style={{ backgroundColor: "var(--deep)" }}
-                  >
-                    <img
-                      src={project.bg}
-                      alt={project.name}
-                      className="w-full h-full object-scale-down p-12 bg-white opacity-80 group-hover:opacity-100 transition-all duration-500 group-hover:scale-105 drop-shadow-2xl"
-                      style={{ transition: "transform 0.8s ease, opacity 0.5s ease" }}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#042116] via-transparent to-transparent" />
-
-                  </motion.div>
-
-                  {/* Project info */}
-                  <motion.div
-                    key={active}
-                    initial={{ opacity: 0, x: 40 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.6, delay: 0.2 }}
-                    className="flex flex-col gap-6"
-                  >
-                    <span className="text-[var(--teal)] text-xs font-bold tracking-widest uppercase">{project.category}</span>
-                    <h3 className="text-4xl md:text-6xl font-black tracking-tighter leading-none">{project.name}</h3>
-                    <p className="text-[rgba(253,251,247,0.55)] text-sm tracking-widest uppercase leading-relaxed border-l-2 border-[var(--teal)] pl-4">{project.detail}</p>
-
-                  </motion.div>
-                </div>
-              </div>
-            ))}
+            {word}
           </motion.div>
+        ))}
+      </div>
+
+      <div className="relative z-10 w-full max-w-[1400px] mx-auto flex flex-col justify-center min-h-[70vh]">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 1.5 }}
+          className="flex items-center gap-4 mb-8"
+        >
+          <span className="text-[9px] uppercase tracking-[0.2em] font-bold text-[#138F84]">DEALPOST</span>
+          <div className="h-[1px] w-12 bg-[#138F84] opacity-50" />
+          <span className="text-[9px] uppercase tracking-[0.2em] font-bold opacity-80">CREATIVE × MARKETING × TECHNOLOGY</span>
+        </motion.div>
+        
+        <div className="overflow-hidden">
+          <motion.h1 
+            initial={{ y: "100%" }}
+            animate={{ y: 0 }}
+            transition={{ duration: 1, delay: 1.6, ease: [0.16, 1, 0.3, 1] }}
+            className="text-[12vw] md:text-[110px] lg:text-[140px] leading-[0.85] font-black tracking-tighter uppercase"
+          >
+            WE MAKE<br />
+            BRANDS<br />
+            IMPOSSIBLE<br />
+            <em className="not-italic text-[#138F84]">TO IGNORE.</em>
+          </motion.h1>
         </div>
 
-        {/* Arrows */}
-        <button onClick={prev} className="absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full border border-[var(--teal)] text-[var(--teal)] flex items-center justify-center hover:bg-[var(--teal)] hover:text-[var(--ink)] transition-all z-10 text-xl font-bold">‹</button>
-        <button onClick={next} className="absolute right-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full border border-[var(--teal)] text-[var(--teal)] flex items-center justify-center hover:bg-[var(--teal)] hover:text-[var(--ink)] transition-all z-10 text-xl font-bold">›</button>
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 2.2 }}
+          className="mt-16 max-w-xl flex flex-col md:flex-row gap-8 items-start md:items-center"
+        >
+          <p className="text-sm md:text-base opacity-80 font-medium leading-relaxed flex-1">
+            Dealpost brings creativity, strategy, technology and performance together to help brands stand out, connect with people and move forward.
+          </p>
+          <div className="flex flex-col gap-4">
+            <SectionLink id="about" className="bg-[#138F84] text-[#061F1C] px-8 py-4 rounded-full text-[10px] uppercase tracking-widest font-bold flex items-center justify-between gap-4 hover:bg-white transition-colors">
+              EXPLORE OUR WORLD <ArrowUpRight size={16} />
+            </SectionLink>
+            <SectionLink id="contact" className="border border-[rgba(255,255,255,0.2)] px-8 py-4 rounded-full text-[10px] uppercase tracking-widest font-bold flex items-center justify-between gap-4 hover:bg-[rgba(255,255,255,0.1)] transition-colors">
+              START A PROJECT <ArrowUpRight size={16} />
+            </SectionLink>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+function Intro() {
+  return (
+    <section id="about" className="py-32 px-6 md:px-10 lg:px-[58px] bg-[#F3FAF7] text-[#061F1C]">
+      <div className="max-w-[1400px] mx-auto">
+        <div className="flex justify-between text-[10px] uppercase tracking-[0.2em] font-bold text-[#126F65] mb-20 border-b border-[rgba(14,84,76,0.1)] pb-4">
+          <span>01 / DEALPOST</span>
+          <span>WHO WE ARE</span>
+        </div>
+        
+        <Reveal>
+          <h2 className="text-5xl md:text-7xl lg:text-[100px] font-black tracking-tighter leading-[0.9] mb-24">
+            GREAT DESIGN<br />
+            HAS CREATIVITY<br />
+            <em className="text-[#138F84] not-italic">AND STRATEGY.</em>
+          </h2>
+        </Reveal>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 lg:gap-32">
+          <Reveal delay={0.2}>
+            <p className="text-2xl md:text-4xl font-bold tracking-tight leading-tight">
+              At Dealpost, creativity isn't created in isolation.
+            </p>
+          </Reveal>
+          <Reveal delay={0.3} className="flex flex-col gap-8 text-lg opacity-80 font-medium">
+            <p>
+              We combine ideas, design, technology, content and strategy to create experiences that people notice, remember and act on.
+            </p>
+            <p>
+              From the first concept to the final campaign, we bring the thinking and execution together. Good ideas deserve great execution.
+            </p>
+            <div className="mt-8 p-8 bg-white rounded-2xl shadow-sm border border-[rgba(14,84,76,0.05)]">
+              <h4 className="text-[10px] uppercase tracking-widest font-bold text-[#138F84] mb-4">THE DIFFERENCE</h4>
+              <strong className="text-xl font-black tracking-tight leading-snug block">ONE PARTNER.<br/>MULTIPLE CAPABILITIES.<br/>ONE CLEAR DIRECTION.</strong>
+            </div>
+          </Reveal>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Ecosystem() {
+  const steps = [
+    "BRAND", "CONTENT", "SOCIAL", "CAMPAIGNS", "PERFORMANCE", "DIGITAL", "TECHNOLOGY", "SPACE", "GROWTH"
+  ];
+  
+  return (
+    <section id="services" className="py-40 overflow-hidden bg-[#061F1C] text-white relative">
+      <div className="px-6 md:px-10 lg:px-[58px] mb-24 max-w-[1400px] mx-auto">
+        <Reveal>
+          <span className="text-[10px] uppercase tracking-widest font-bold text-[#138F84]">02 / WHAT WE DO</span>
+          <h2 className="text-4xl md:text-7xl font-black tracking-tighter mt-4 leading-none">
+            WE DON'T JUST<br />PROVIDE SERVICES.
+          </h2>
+          <p className="text-2xl md:text-4xl font-bold text-[#138F84] mt-8 tracking-tight">WE BUILD THE SYSTEM AROUND YOUR BRAND.</p>
+        </Reveal>
       </div>
 
-      {/* Dot indicators */}
-      <div className="flex justify-center gap-3 mt-12">
-        {projects.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setActive(i)}
-            className="transition-all duration-300 rounded-full"
-            style={{
-              width: i === active ? "32px" : "8px",
-              height: "8px",
-              background: i === active ? "var(--teal)" : "rgba(212,175,55,0.3)",
-            }}
-          />
+      <div className="relative flex flex-nowrap items-center w-[200vw] md:w-auto overflow-x-auto pb-12 hide-scrollbar px-6 md:px-10 lg:px-[58px] gap-8 md:gap-16">
+        {steps.map((step, i) => (
+          <Reveal key={step} delay={i * 0.1} className="flex-shrink-0 flex items-center">
+            <div className="flex flex-col items-center">
+              <div className="w-4 h-4 rounded-full bg-[#138F84] mb-4 relative">
+                <div className="absolute inset-0 rounded-full bg-[#138F84] animate-ping opacity-50" />
+              </div>
+              <strong className="text-2xl md:text-4xl lg:text-6xl font-black tracking-tighter uppercase">{step}</strong>
+            </div>
+            {i !== steps.length - 1 && (
+              <div className="h-[2px] w-16 md:w-32 bg-gradient-to-r from-[#138F84] to-transparent mx-4 md:mx-8 opacity-50" />
+            )}
+          </Reveal>
         ))}
       </div>
     </section>
   );
 }
 
-
-
-function Services() {
-  const [active, setActive] = useState(0);
-  const group = serviceGroups[active];
+function Performance() {
   return (
-    <section id="services" className="min-h-screen py-32 px-6 md:px-10 lg:px-[58px] bg-[var(--deep)] text-[var(--mint)] relative overflow-hidden">
-      <div className="absolute top-[-20%] right-[-10%] w-[60%] aspect-square bg-[var(--teal)] rounded-full mix-blend-overlay blur-[120px] opacity-10 pointer-events-none" />
-      
-      <Reveal><span className="text-[9px] uppercase tracking-[0.15em] font-bold text-[var(--teal)]">04 / Capabilities</span></Reveal>
-      <Reveal delay={0.1}><h2 className="text-5xl md:text-7xl lg:text-9xl font-black tracking-tighter mt-12 leading-none">End-to-end.<br /><em className="text-[var(--teal)] not-italic">One creative</em><br />partner<span className="text-[var(--teal)]">.</span></h2></Reveal>
-      
-      <div className="grid md:grid-cols-2 gap-16 mt-24">
-        <div className="flex flex-col border-t border-[rgba(253,251,247,0.15)]">
-          {serviceGroups.map((item, index) => (
-            <button key={item.name} className={`flex items-center text-left py-8 border-b border-[rgba(253,251,247,0.15)] transition-all duration-300 ${active === index ? 'text-[var(--mint)] pl-8 bg-[rgba(253,251,247,0.02)]' : 'text-[rgba(253,251,247,0.4)] hover:text-[var(--mint)] hover:pl-4'}`} onClick={() => setActive(index)}>
-              <strong className="flex-1 text-3xl md:text-5xl tracking-tighter font-black">{item.name}</strong>
-              <ArrowUpRight size={24} className={`transition-opacity duration-300 ${active === index ? 'opacity-100 text-[var(--teal)]' : 'opacity-0'}`} />
-            </button>
-          ))}
-        </div>
-        
-        <div className="min-h-[500px] border border-[rgba(253,251,247,0.15)] p-12 relative overflow-hidden bg-[rgba(4,33,22,0.4)] backdrop-blur-md rounded-lg">
-          <div className="absolute -bottom-32 -right-32 w-[400px] aspect-square border border-[var(--teal)] rounded-full opacity-30" />
-          <AnimatePresence mode="wait">
-            <motion.div key={active} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4 }}>
-              <div className="flex justify-between text-[rgba(253,251,247,0.5)] text-xs font-bold tracking-widest uppercase mb-24">
-                <span>{group.descriptor}</span>
-                <span>{group.number} / 06</span>
+    <section id="performance" className="py-32 px-6 md:px-10 lg:px-[58px] bg-[#0E544C] text-white">
+      <div className="max-w-[1400px] mx-auto">
+        <Reveal>
+          <h2 className="text-5xl md:text-8xl font-black tracking-tighter leading-none mb-16">
+            ATTENTION<br />
+            IS GOOD.<br />
+            <em className="text-[#138F84] not-italic">PERFORMANCE<br />IS BETTER.</em>
+          </h2>
+        </Reveal>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <Reveal delay={0.2} className="text-lg opacity-90 font-medium">
+            <p className="mb-6">Creative gets attention. Performance marketing turns that attention into measurable action.</p>
+            <p>We build campaigns around the complete journey — from audience discovery and creative testing to clicks, leads, conversions and optimisation.</p>
+            
+            <div className="mt-12 flex flex-wrap gap-4">
+              {['Meta Advertising', 'Google Ads', 'Conversion Campaigns', 'Retargeting', 'Analytics'].map(s => (
+                <span key={s} className="px-6 py-3 rounded-full border border-[rgba(255,255,255,0.2)] text-xs font-bold uppercase tracking-widest">{s}</span>
+              ))}
+            </div>
+          </Reveal>
+
+          <Reveal delay={0.4} className="relative">
+            <div className="bg-[#061F1C] p-8 rounded-3xl border border-[rgba(255,255,255,0.1)] shadow-2xl relative overflow-hidden">
+              <div className="absolute top-4 right-6 text-[8px] uppercase tracking-widest text-[#138F84] font-bold opacity-60">ILLUSTRATIVE DASHBOARD</div>
+              
+              <div className="flex items-center gap-4 mb-8 border-b border-[rgba(255,255,255,0.05)] pb-6">
+                <div className="w-3 h-3 rounded-full bg-red-500" />
+                <div className="w-3 h-3 rounded-full bg-yellow-500" />
+                <div className="w-3 h-3 rounded-full bg-green-500" />
+                <span className="text-xs font-bold tracking-widest opacity-50 ml-4">CAMPAIGN_COMMAND_CENTER</span>
               </div>
-              <h3 className="text-[var(--teal)] text-5xl md:text-7xl font-black tracking-tighter mb-12">{group.name}</h3>
-              <div className="flex flex-wrap gap-x-4 gap-y-2">
-                {group.services.map((service, index) => (
-                  <motion.div key={service} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: index * 0.05 }} className="text-sm md:text-base opacity-90 flex items-center">
-                    {service} <span className="text-[var(--teal)] ml-4 font-bold">/</span>
+
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                {[
+                  { label: "REACH", value: "2.4M", trend: "+14%" },
+                  { label: "CLICKS", value: "84K", trend: "+22%" },
+                  { label: "LEADS", value: "1,240", trend: "+8%" },
+                  { label: "CONVERSIONS", value: "312", trend: "+45%" },
+                ].map((stat, i) => (
+                  <motion.div 
+                    key={stat.label}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.6 + i * 0.1 }}
+                    className="flex flex-col"
+                  >
+                    <span className="text-[10px] uppercase font-bold opacity-60 tracking-widest mb-2">{stat.label}</span>
+                    <strong className="text-3xl font-black tracking-tight">{stat.value}</strong>
+                    <span className="text-[10px] font-bold text-[#138F84] mt-1">{stat.trend}</span>
                   </motion.div>
                 ))}
               </div>
-            </motion.div>
-          </AnimatePresence>
+
+              <div className="mt-10 h-32 w-full flex items-end gap-2">
+                {[40, 60, 45, 80, 55, 90, 75, 100, 85, 120].map((h, i) => (
+                  <motion.div 
+                    key={i}
+                    initial={{ height: 0 }}
+                    whileInView={{ height: `${h}%` }}
+                    transition={{ duration: 1, delay: 0.8 + i * 0.05, ease: "easeOut" }}
+                    className="flex-1 bg-gradient-to-t from-[#138F84] to-[#126F65] rounded-t-sm opacity-80"
+                  />
+                ))}
+              </div>
+            </div>
+          </Reveal>
         </div>
+      </div>
+    </section>
+  );
+}
+
+function SocialFeed() {
+  return (
+    <section id="social" className="py-32 px-6 md:px-10 lg:px-[58px] bg-[#F3FAF7] text-[#061F1C] overflow-hidden">
+      <div className="max-w-[1400px] mx-auto">
+        <Reveal>
+          <span className="text-[10px] uppercase tracking-widest font-bold text-[#126F65]">03 / SOCIAL MEDIA</span>
+          <h2 className="text-5xl md:text-8xl font-black tracking-tighter leading-none mt-4 mb-16">
+            YOUR BRAND<br />DESERVES A FEED<br />
+            <em className="text-[#138F84] not-italic">WORTH FOLLOWING.</em>
+          </h2>
+        </Reveal>
+        
+        <div className="flex flex-col lg:flex-row gap-16 items-center">
+          <div className="w-full lg:w-[40%] flex flex-col gap-6 font-medium text-lg opacity-80">
+            <p>Social isn't just about posting. It's about building a recognisable voice, creating content people want to engage with and turning attention into meaningful action.</p>
+            <p>We plan, create, publish, manage and optimise social content around your brand and business goals.</p>
+            
+            <div className="mt-8 space-y-4">
+              <div className="flex items-center gap-4 text-sm font-bold uppercase tracking-widest"><div className="w-2 h-2 bg-[#138F84]" /> CONTENT STRATEGY</div>
+              <div className="flex items-center gap-4 text-sm font-bold uppercase tracking-widest"><div className="w-2 h-2 bg-[#138F84]" /> SHORT-FORM VIDEO / REELS</div>
+              <div className="flex items-center gap-4 text-sm font-bold uppercase tracking-widest"><div className="w-2 h-2 bg-[#138F84]" /> COMMUNITY MANAGEMENT</div>
+            </div>
+          </div>
+          
+          <div className="w-full lg:w-[60%] relative h-[600px] flex justify-center items-center">
+            {/* Fake Dealpost Social Post */}
+            <motion.div 
+              animate={{ y: [-10, 10, -10] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+              className="w-[340px] bg-white rounded-3xl shadow-[0_20px_50px_rgba(14,84,76,0.15)] border border-[rgba(14,84,76,0.05)] overflow-hidden z-20 absolute"
+            >
+              <div className="p-4 flex items-center gap-3 border-b border-gray-100">
+                <div className="w-8 h-8 rounded-full bg-[#0E544C] flex items-center justify-center p-2">
+                  <img src={dealpostLogo} alt="DP" className="filter brightness-0 invert object-contain" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs font-bold">Dealpost</span>
+                  <span className="text-[9px] uppercase tracking-widest opacity-50">Creative Studio</span>
+                </div>
+              </div>
+              <div className="aspect-[4/5] bg-[#0E544C] relative flex items-center justify-center p-8 overflow-hidden group">
+                <motion.div 
+                  animate={{ scale: [1, 1.05, 1] }} 
+                  transition={{ duration: 4, repeat: Infinity }}
+                  className="absolute inset-0 bg-gradient-to-br from-[#126F65] to-[#061F1C]" 
+                />
+                <h3 className="relative z-10 text-white text-4xl font-black tracking-tighter leading-none text-center">
+                  DESIGN<br />THAT WORKS<br />BEYOND<br />THE FEED.
+                </h3>
+              </div>
+              <div className="p-4 flex justify-between items-center bg-gray-50">
+                <div className="flex gap-4 font-bold text-xs opacity-70">
+                  <span>♡ 12.8K</span>
+                  <span>💬 438</span>
+                </div>
+                <span className="text-[10px] font-bold text-[#138F84] uppercase tracking-widest flex items-center gap-1">
+                  REACH ↗ 1.2M
+                </span>
+              </div>
+            </motion.div>
+            
+            {/* Background elements */}
+            <motion.div 
+              animate={{ y: [20, -20, 20], rotate: -5 }}
+              transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+              className="w-[300px] h-[400px] bg-[#126F65] rounded-3xl absolute -left-10 opacity-20 blur-sm z-10"
+            />
+            <motion.div 
+              animate={{ y: [-20, 20, -20], rotate: 5 }}
+              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+              className="w-[300px] h-[400px] bg-[#138F84] rounded-3xl absolute -right-10 opacity-20 blur-sm z-10"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Technology() {
+  return (
+    <section id="technology" className="py-32 px-6 md:px-10 lg:px-[58px] bg-[#061F1C] text-white">
+      <div className="max-w-[1400px] mx-auto">
+        <Reveal>
+          <span className="text-[10px] uppercase tracking-widest font-bold text-[#138F84]">04 / TECHNOLOGY</span>
+          <h2 className="text-5xl md:text-8xl font-black tracking-tighter leading-none mt-4 mb-16">
+            WE DON'T JUST<br />DESIGN SOFTWARE.<br />
+            <em className="text-[#138F84] not-italic">WE BUILD IT.</em>
+          </h2>
+        </Reveal>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+          <Reveal delay={0.2} className="relative h-[400px] flex items-center">
+            {/* Tech Assembly Animation */}
+            <div className="flex flex-col gap-4 text-2xl font-black tracking-tighter w-full">
+              {[
+                { name: "IDEA", icon: <Monitor size={20} /> },
+                { name: "DESIGN", icon: <Layout size={20} /> },
+                { name: "FRONTEND", icon: <Code size={20} /> },
+                { name: "BACKEND", icon: <Database size={20} /> }
+              ].map((step, i) => (
+                <motion.div 
+                  key={step.name}
+                  initial={{ opacity: 0, x: -50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.2 + i * 0.2 }}
+                  className="flex items-center gap-6"
+                >
+                  <div className="w-12 h-12 rounded-full bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] flex items-center justify-center text-[#138F84]">
+                    {step.icon}
+                  </div>
+                  <span>{step.name}</span>
+                  {i !== 3 && <div className="flex-1 h-[1px] bg-gradient-to-r from-[rgba(255,255,255,0.1)] to-transparent" />}
+                </motion.div>
+              ))}
+            </div>
+          </Reveal>
+          
+          <Reveal delay={0.4} className="flex flex-col justify-center">
+            <p className="text-xl font-medium opacity-80 mb-10">
+              From internal business tools to complete digital platforms, we design and develop software around real business workflows.
+            </p>
+            <div className="grid grid-cols-2 gap-6">
+              {[
+                "Web Applications", "CMS Development", "API Integration", "Database Systems", 
+                "E-commerce", "Admin Dashboards", "UI/UX Design", "Cloud Platforms"
+              ].map(s => (
+                <div key={s} className="flex flex-col border-b border-[rgba(255,255,255,0.1)] pb-4">
+                  <span className="text-sm font-bold uppercase tracking-widest">{s}</span>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Podcast() {
+  return (
+    <section className="py-32 px-6 md:px-10 lg:px-[58px] bg-white text-[#061F1C] overflow-hidden">
+      <div className="max-w-[1400px] mx-auto text-center relative z-10">
+        <Reveal>
+          <span className="text-[10px] uppercase tracking-widest font-bold text-[#138F84]">05 / MEDIA</span>
+          <h2 className="text-5xl md:text-8xl font-black tracking-tighter leading-none mt-4 mb-8">
+            CONVERSATIONS<br />
+            WORTH<br />
+            LISTENING TO.
+          </h2>
+          <p className="max-w-xl mx-auto text-lg font-medium opacity-70 mb-16">
+            From the first conversation to the final clip, we help turn ideas and expertise into engaging audio and video content.
+          </p>
+        </Reveal>
+        
+        {/* Waveform Animation */}
+        <div className="flex items-center justify-center gap-1 h-32">
+          {[...Array(40)].map((_, i) => (
+            <motion.div
+              key={i}
+              animate={{ height: ["20%", `${Math.random() * 80 + 20}%`, "20%"] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut", delay: i * 0.05 }}
+              className="w-2 md:w-3 bg-[#0E544C] rounded-full"
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Contact() {
+  const [formData, setFormData] = useState({ name: "", email: "", type: "Performance Marketing", message: "" });
+  
+  return (
+    <section id="contact" className="py-32 px-6 md:px-10 lg:px-[58px] bg-[#0E544C] text-white">
+      <div className="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16">
+        <div>
+          <Reveal>
+            <h2 className="text-6xl md:text-[100px] font-black tracking-tighter leading-none mb-8">
+              READY TO<br />BUILD<br /><em className="text-[#138F84] not-italic">SOMETHING<br />BIGGER?</em>
+            </h2>
+            <p className="text-xl font-medium opacity-80 mb-12">Tell us what you're building, launching or trying to grow.</p>
+            
+            <div className="space-y-6">
+              <div>
+                <strong className="text-[10px] uppercase tracking-widest font-bold opacity-50 block mb-2">EMAIL</strong>
+                <a href="mailto:hello@dealpost.co.in" className="text-2xl font-bold hover:text-[#138F84] transition-colors">hello@dealpost.co.in</a>
+              </div>
+              <div>
+                <strong className="text-[10px] uppercase tracking-widest font-bold opacity-50 block mb-2">PHONE</strong>
+                <a href="tel:+919999999999" className="text-2xl font-bold hover:text-[#138F84] transition-colors">+91 99999 99999</a>
+              </div>
+            </div>
+          </Reveal>
+        </div>
+        
+        <Reveal delay={0.2} className="bg-[#061F1C] p-10 md:p-16 rounded-[40px] border border-[rgba(255,255,255,0.05)]">
+          <form className="flex flex-col gap-8" onSubmit={(e) => e.preventDefault()}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <label className="flex flex-col gap-2">
+                <span className="text-[10px] uppercase tracking-widest font-bold opacity-50">Name</span>
+                <input type="text" className="bg-transparent border-b border-[rgba(255,255,255,0.2)] pb-4 outline-none focus:border-[#138F84] transition-colors text-xl font-bold" />
+              </label>
+              <label className="flex flex-col gap-2">
+                <span className="text-[10px] uppercase tracking-widest font-bold opacity-50">Email</span>
+                <input type="email" className="bg-transparent border-b border-[rgba(255,255,255,0.2)] pb-4 outline-none focus:border-[#138F84] transition-colors text-xl font-bold" />
+              </label>
+            </div>
+            
+            <label className="flex flex-col gap-2">
+              <span className="text-[10px] uppercase tracking-widest font-bold opacity-50">What do you need?</span>
+              <select className="bg-transparent border-b border-[rgba(255,255,255,0.2)] pb-4 outline-none focus:border-[#138F84] transition-colors text-xl font-bold appearance-none cursor-pointer">
+                <option value="Branding" className="bg-[#061F1C]">Branding</option>
+                <option value="Social Media" className="bg-[#061F1C]">Social Media</option>
+                <option value="Performance Marketing" className="bg-[#061F1C]">Performance Marketing</option>
+                <option value="Website" className="bg-[#061F1C]">Website Development</option>
+                <option value="Software" className="bg-[#061F1C]">Software Development</option>
+                <option value="Podcast" className="bg-[#061F1C]">Podcast & Media</option>
+                <option value="Interiors" className="bg-[#061F1C]">Interior Design</option>
+              </select>
+            </label>
+            
+            <label className="flex flex-col gap-2">
+              <span className="text-[10px] uppercase tracking-widest font-bold opacity-50">Message</span>
+              <textarea rows={3} className="bg-transparent border-b border-[rgba(255,255,255,0.2)] pb-4 outline-none focus:border-[#138F84] transition-colors text-xl font-bold resize-none" />
+            </label>
+            
+            <button className="mt-8 bg-[#138F84] text-[#061F1C] py-6 px-10 rounded-full font-black uppercase tracking-widest text-xs flex items-center justify-between hover:bg-white transition-colors w-full group">
+              START A CONVERSATION <ArrowUpRight size={20} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+            </button>
+          </form>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+function Navigation() {
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  return (
+    <>
+      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? "py-4" : "py-8"}`}>
+        <div className={`mx-6 md:mx-10 lg:mx-[58px] flex items-center justify-between transition-all duration-500 ${scrolled ? "bg-[rgba(6,31,28,0.85)] backdrop-blur-md border border-[rgba(255,255,255,0.1)] px-8 py-4 rounded-full" : ""}`}>
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-[#138F84] flex items-center justify-center p-2">
+              <img src={dealpostLogo} alt="DP" className="filter brightness-0 invert object-contain" />
+            </div>
+            <span className="text-white font-black tracking-widest uppercase text-sm">DEALPOST</span>
+          </div>
+          
+          <nav className="hidden md:flex items-center gap-8 text-[10px] uppercase font-bold tracking-widest text-white opacity-80">
+            <SectionLink id="about" className="hover:text-[#138F84] transition-colors">About</SectionLink>
+            <SectionLink id="services" className="hover:text-[#138F84] transition-colors">Services</SectionLink>
+            <SectionLink id="performance" className="hover:text-[#138F84] transition-colors">Performance</SectionLink>
+            <SectionLink id="technology" className="hover:text-[#138F84] transition-colors">Tech</SectionLink>
+            <SectionLink id="contact" className="hover:text-white text-[#138F84] transition-colors">Let's Talk →</SectionLink>
+          </nav>
+          
+          <button className="md:hidden text-white" onClick={() => setMenuOpen(!menuOpen)}>
+            {menuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
+      </header>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div 
+            initial={{ opacity: 0, y: "-100%" }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: "-100%" }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed inset-0 z-40 bg-[#0E544C] flex flex-col justify-center px-10"
+          >
+            <nav className="flex flex-col gap-8 text-3xl font-black uppercase tracking-tighter text-white">
+              <SectionLink id="home" onClick={() => setMenuOpen(false)}>Home</SectionLink>
+              <SectionLink id="about" onClick={() => setMenuOpen(false)}>About</SectionLink>
+              <SectionLink id="services" onClick={() => setMenuOpen(false)}>Services</SectionLink>
+              <SectionLink id="performance" onClick={() => setMenuOpen(false)}>Performance</SectionLink>
+              <SectionLink id="social" onClick={() => setMenuOpen(false)}>Social</SectionLink>
+              <SectionLink id="technology" onClick={() => setMenuOpen(false)}>Technology</SectionLink>
+              <SectionLink id="contact" className="text-[#138F84]" onClick={() => setMenuOpen(false)}>Let's Talk</SectionLink>
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+}
+
+function Footer() {
+  return (
+    <footer className="bg-[#061F1C] text-white py-16 px-6 md:px-10 lg:px-[58px] border-t border-[rgba(255,255,255,0.05)]">
+      <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center gap-3 opacity-50">
+            <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center p-1.5">
+              <img src={dealpostLogo} alt="DP" className="filter object-contain" />
+            </div>
+            <span className="font-black tracking-widest uppercase text-xs">DEALPOST</span>
+          </div>
+          <p className="text-[10px] font-bold tracking-widest uppercase opacity-40">CREATIVITY × STRATEGY × TECHNOLOGY</p>
+        </div>
+        
+        <div className="flex gap-8 text-[10px] font-bold tracking-widest uppercase opacity-50">
+          <a href="https://dealpost.co.in" className="hover:opacity-100 transition-opacity">dealpost.co.in</a>
+          <span>© {new Date().getFullYear()}</span>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+function Projects() {
+  const projects = [
+    { title: "TIDEL", category: "REBRANDING / BRAND IDENTITY", desc: "Monogram, Wordmark, Business Cards, Signage, Digital Display, Uniform, Stationery", color: "#F3FAF7" },
+    { title: "CHENNAI AEROSPACE PARK", category: "BRAND IDENTITY", desc: "Logo, Monogram, Wordmark, Brand system, Applications", color: "#138F84" },
+    { title: "TAMIL NADU TOURISM", category: "BRAND IDENTITY / COMMUNICATION", desc: "Sketches, Logo concepts, Identity, Applications, Campaign work", color: "#F3FAF7" },
+    { title: "KINGSFORD", category: "BRANDING & DIGITAL", desc: "Branding, Brochure, Marketing, Campaign, Website, Digital experience", color: "#126F65" },
+    { title: "VALENCIA", category: "IDENTITY & MARKETING", desc: "Identity, Fingerprint/heart concept, Brochure, Marketing collateral", color: "#F3FAF7" },
+    { title: "MADURAI SMART CITY", category: "PROJECT COMMUNICATION", desc: "Brand Identity, Strategy, Applications", color: "#0E544C" }
+  ];
+
+  return (
+    <section id="work" className="py-32 px-6 md:px-10 lg:px-[58px] bg-[#F3FAF7] text-[#061F1C] overflow-hidden">
+      <div className="max-w-[1400px] mx-auto mb-20">
+        <Reveal>
+          <span className="text-[10px] uppercase tracking-widest font-bold text-[#126F65]">10 / SELECTED WORK</span>
+          <h2 className="text-6xl md:text-8xl lg:text-[120px] font-black tracking-tighter leading-[0.85] mt-4 mb-8">
+            PROOF<br />
+            IS IN THE<br />
+            <em className="text-[#138F84] not-italic">WORK.</em>
+          </h2>
+        </Reveal>
+      </div>
+
+      <div className="relative flex flex-nowrap items-center w-[300vw] md:w-auto overflow-x-auto pb-12 hide-scrollbar px-6 md:px-10 lg:px-[58px] gap-8">
+        {projects.map((project, i) => (
+          <motion.div 
+            key={project.title}
+            initial={{ opacity: 0, x: 100 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: i * 0.1 }}
+            className="flex-shrink-0 w-[300px] md:w-[500px] group cursor-pointer"
+          >
+            <div 
+              className="aspect-[4/5] rounded-[30px] p-8 flex flex-col justify-between mb-8 shadow-sm transition-transform duration-500 group-hover:-translate-y-4"
+              style={{ backgroundColor: project.color, color: project.color === '#F3FAF7' ? '#061F1C' : '#FFFFFF' }}
+            >
+              <div className="flex justify-between items-start">
+                <span className="text-[10px] font-bold uppercase tracking-widest opacity-70">CASE STUDY</span>
+                <ArrowUpRight size={24} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+              </div>
+              <div>
+                <h3 className="text-3xl md:text-5xl font-black tracking-tighter leading-none mb-4 uppercase">{project.title}</h3>
+                <div className="text-[10px] uppercase font-bold tracking-widest opacity-80 mb-2">{project.category}</div>
+                <p className="text-sm font-medium opacity-70">{project.desc}</p>
+              </div>
+            </div>
+          </motion.div>
+        ))}
       </div>
     </section>
   );
 }
 
 function Clients() {
-  const [hovered, setHovered] = useState<number | null>(null);
+  const clients = [
+    "MADURAI CORPORATION", "TAMIL NADU TOURISM (TTDC)", "CHENNAI AEROSPACE PARK", "MADURAI SMART CITY", "TIDEL"
+  ];
 
   return (
-    <section id="clients" className="py-32 px-6 md:px-10 lg:px-[58px] bg-[var(--mint)] text-[var(--ink)] relative">
-      <div className="flex justify-between text-[9px] uppercase tracking-[0.15em] font-bold text-[rgba(6,33,22,0.5)] mb-24 border-b border-[var(--line)] pb-4">
-        <span>06 / Clients</span>
-        <span>Selected company</span>
-      </div>
-      <Reveal>
-        <h2 className="text-5xl md:text-7xl lg:text-[100px] font-black tracking-tighter leading-none mb-24 relative z-20">
-          Trusted<br />
-          <em className="text-[var(--teal)] not-italic">by brands</em><br />
-          with purpose<span className="text-[var(--teal)]">.</span>
-        </h2>
-      </Reveal>
-      
-      <div className="flex flex-col lg:flex-row justify-between relative z-20 gap-16">
-        <div className="w-full lg:w-[60%] border-t border-[var(--line)] relative" onMouseLeave={() => setHovered(null)}>
-          {clientsData.map((client, index) => (
-            <Reveal key={client.name} delay={index * 0.08}>
-              <div 
-                className="group flex items-center justify-between min-h-[100px] border-b border-[var(--line)] px-0 transition-all duration-300 hover:pl-8 hover:bg-[rgba(212,175,55,0.03)] cursor-default"
-                onMouseEnter={() => setHovered(index)}
-              >
-                <div className="flex items-center gap-8">
-                  <div>
-                    <strong className="text-2xl md:text-5xl font-black tracking-tight group-hover:text-[var(--teal)] transition-colors block">{client.name}</strong>
-                    <span className="text-[10px] font-bold tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity text-[var(--ink)] mt-2 block h-0 group-hover:h-auto overflow-hidden">{client.type}</span>
-                  </div>
+    <section id="clients" className="py-32 px-6 md:px-10 lg:px-[58px] bg-white text-[#061F1C]">
+      <div className="max-w-[1400px] mx-auto">
+        <Reveal className="text-center mb-24">
+          <span className="text-[10px] uppercase tracking-widest font-bold text-[#138F84]">11 / CLIENTS</span>
+          <h2 className="text-5xl md:text-7xl font-black tracking-tighter leading-none mt-4">
+            BUILT WITH<br />
+            BRANDS THAT<br />
+            THINK FORWARD.
+          </h2>
+        </Reveal>
+
+        <div className="flex flex-wrap justify-center gap-4 md:gap-8">
+          {clients.map((client, i) => (
+            <Reveal key={client} delay={i * 0.1}>
+              <div className="px-8 py-6 rounded-2xl border border-[rgba(14,84,76,0.1)] bg-[#F3FAF7] text-[#0E544C] font-black uppercase tracking-widest text-lg md:text-2xl hover:bg-[#138F84] hover:text-white transition-all duration-300 cursor-pointer shadow-sm group">
+                {client}
+                <div className="h-0 overflow-hidden group-hover:h-auto transition-all duration-300">
+                  <span className="text-[8px] tracking-widest mt-2 block opacity-80">BRANDING • DIGITAL</span>
                 </div>
-                <ArrowUpRight size={24} className="opacity-0 group-hover:opacity-100 text-[var(--teal)] transition-opacity" />
               </div>
             </Reveal>
           ))}
         </div>
-        <div className="hidden lg:block w-[35%]"></div>
-      </div>
-
-      {/* Render fixed image outside of Reveal to prevent stacking context clipping */}
-      <div className="fixed top-[20%] right-6 md:right-10 lg:right-[58px] bottom-[20%] w-[40vw] max-w-[600px] pointer-events-none z-0 hidden lg:block perspective-1000">
-        <AnimatePresence>
-          {hovered !== null && (
-            <motion.div
-              key={hovered}
-              initial={{ opacity: 0, scale: 0.95, rotateY: -10 }}
-              animate={{ opacity: 1, scale: 1, rotateY: 0 }}
-              exit={{ opacity: 0, scale: 0.95, rotateY: 10 }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="absolute inset-0 overflow-hidden rounded-xl shadow-[0_20px_50px_rgba(6,64,43,0.3)] border border-[rgba(212,175,55,0.2)]"
-            >
-              <img 
-                src={clientsData[hovered].image} 
-                alt={clientsData[hovered].name} 
-                className="w-full h-full object-scale-down p-12 bg-white" 
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[var(--deep)] to-transparent opacity-60" />
-              <div className="absolute bottom-6 left-6 text-white text-[10px] font-bold tracking-widest uppercase">
-                <span className="text-[var(--teal)]">Client /</span> {clientsData[hovered].name}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
     </section>
   );
 }
 
-function ContactForm() {
-  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const [errorMessage, setErrorMessage] = useState("");
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.name || !formData.email || !formData.message) return;
-    
-    setStatus("loading");
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to send message");
-      
-      setStatus("success");
-      setFormData({ name: "", email: "", message: "" });
-      setTimeout(() => setStatus("idle"), 5000);
-    } catch (error: any) {
-      setStatus("error");
-      setErrorMessage(error.message);
-      setTimeout(() => setStatus("idle"), 5000);
-    }
-  };
-
+function Founder() {
   return (
-    <form onSubmit={handleSubmit} className="bg-[rgba(253,251,247,0.03)] p-12 rounded-2xl border border-[rgba(253,251,247,0.1)] backdrop-blur-md relative overflow-hidden">
-      {status === "success" && (
-        <div className="absolute inset-0 bg-[var(--teal)] text-[var(--ink)] flex flex-col items-center justify-center z-20">
-          <h3 className="text-3xl font-black mb-2">Message Sent!</h3>
-          <p className="font-bold opacity-80 text-sm tracking-widest uppercase">We'll be in touch shortly.</p>
-        </div>
-      )}
-      <p className="text-xl font-bold mb-10 opacity-90">Have an idea? Let's talk.</p>
-      {status === "error" && <p className="text-red-400 mb-6 text-sm">{errorMessage}</p>}
-      <div className="flex flex-col gap-8">
-        <label className="flex flex-col gap-2 text-[10px] uppercase tracking-widest font-bold opacity-70">
-          Name <input type="text" required value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} className="bg-transparent border-b border-[rgba(253,251,247,0.2)] pb-2 text-base focus:border-[var(--teal)] outline-none transition-colors mt-2 text-white" />
-        </label>
-        <label className="flex flex-col gap-2 text-[10px] uppercase tracking-widest font-bold opacity-70">
-          Email <input type="email" required value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} className="bg-transparent border-b border-[rgba(253,251,247,0.2)] pb-2 text-base focus:border-[var(--teal)] outline-none transition-colors mt-2 text-white" />
-        </label>
-        <label className="flex flex-col gap-2 text-[10px] uppercase tracking-widest font-bold opacity-70">
-          Message <textarea rows={3} required value={formData.message} onChange={e => setFormData({ ...formData, message: e.target.value })} className="bg-transparent border-b border-[rgba(253,251,247,0.2)] pb-2 text-base focus:border-[var(--teal)] outline-none transition-colors mt-2 resize-none text-white" />
-        </label>
-        <button type="submit" disabled={status === "loading"} data-cursor="SEND" className="bg-[var(--teal)] text-[var(--ink)] py-5 px-8 rounded-full font-bold uppercase tracking-widest text-[10px] flex items-center justify-between hover:bg-white transition-colors mt-4 disabled:opacity-50">
-          {status === "loading" ? "Sending..." : "Start a conversation"} <ArrowUpRight size={16} />
-        </button>
+    <section id="founder" className="py-32 px-6 md:px-10 lg:px-[58px] bg-[#126F65] text-white">
+      <div className="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+        <Reveal>
+          <span className="text-[10px] uppercase tracking-widest font-bold opacity-60">12 / THE PERSON BEHIND THE VISION</span>
+          <h2 className="text-5xl md:text-7xl font-black tracking-tighter leading-[0.9] mt-8 mb-12 uppercase">
+            BUILDING<br />
+            A COMPANY<br />
+            WHERE<br />
+            CREATIVITY<br />
+            MEETS<br />
+            <em className="text-[#138F84] not-italic">EXECUTION.</em>
+          </h2>
+          <div className="flex items-center gap-6 border-t border-[rgba(255,255,255,0.1)] pt-8">
+            <div className="w-16 h-16 rounded-full bg-[#061F1C] flex items-center justify-center font-black text-2xl tracking-tighter border border-[rgba(255,255,255,0.05)]">
+              HJ
+            </div>
+            <div>
+              <strong className="block text-xl font-black tracking-widest uppercase">HARIHARAN J V</strong>
+              <span className="text-[10px] uppercase tracking-widest font-bold text-[#138F84]">CO-FOUNDER — DEALPOST</span>
+            </div>
+          </div>
+        </Reveal>
+        <Reveal delay={0.3} className="bg-[#061F1C] p-12 md:p-16 rounded-[40px] border border-[rgba(255,255,255,0.05)] relative overflow-hidden">
+          <div className="text-[120px] font-black text-[#138F84] opacity-20 absolute -top-10 -left-4 leading-none">"</div>
+          <p className="text-2xl md:text-4xl font-bold tracking-tight leading-tight relative z-10">
+            Great ideas are only valuable when they can be turned into something people see, feel, use and remember.
+          </p>
+        </Reveal>
       </div>
-    </form>
+    </section>
   );
 }
 
 export default function Index() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const { scrollYProgress } = useScroll();
-  const heroY = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
-
   useEffect(() => {
     const lenis = new Lenis({
       duration: 1.6,
-      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
       wheelMultiplier: 0.85,
-      touchMultiplier: 1.5,
     });
     function raf(time: number) {
       lenis.raf(time);
       requestAnimationFrame(raf);
     }
-    const rafId = requestAnimationFrame(raf);
-    return () => {
-      cancelAnimationFrame(rafId);
-      lenis.destroy();
-    };
+    requestAnimationFrame(raf);
+    return () => lenis.destroy();
   }, []);
 
-  const closeMenu = () => setMenuOpen(false);
-
-
   return (
-    <main id="top" className="bg-[var(--mint)] text-[var(--ink)] overflow-x-hidden selection:bg-[var(--teal)] selection:text-white font-['Montserrat']">
-      <CursorFollower />
-
-
-
-      <header className={`fixed top-0 left-0 right-0 h-24 px-6 md:px-10 lg:px-[58px] z-50 flex items-center justify-between transition-colors duration-300 ${menuOpen ? "bg-[var(--deep)]" : "bg-gradient-to-b from-[rgba(6,64,43,0.9)] to-transparent backdrop-blur-sm"} border-b border-[rgba(255,255,255,0.1)]`}>
-        <Logo light />
-        <nav className="hidden md:flex gap-8 ml-auto mr-12 text-[10px] font-bold uppercase tracking-widest text-white opacity-80" aria-label="Main navigation">
-          <SectionLink className="hover:opacity-100 hover:text-[var(--teal)] transition-colors" id="about">About</SectionLink>
-          <SectionLink className="hover:opacity-100 hover:text-[var(--teal)] transition-colors" id="services">Services</SectionLink>
-          <SectionLink className="hover:opacity-100 hover:text-[var(--teal)] transition-colors" id="work">Work</SectionLink>
-          <SectionLink className="hover:opacity-100 hover:text-[var(--teal)] transition-colors" id="clients">Clients</SectionLink>
-          <SectionLink className="hover:opacity-100 hover:text-[var(--teal)] transition-colors" id="contact">Contact</SectionLink>
-        </nav>
-        <MagneticLink id="contact" className="hidden md:flex gap-2 items-center text-[10px] font-bold uppercase tracking-widest text-white border-b border-white pb-1 hover:text-[var(--teal)] hover:border-[var(--teal)] transition-colors">
-          Let's talk <ArrowUpRight size={14} />
-        </MagneticLink>
-        <button className="md:hidden text-white" onClick={() => setMenuOpen(!menuOpen)}>
-          {menuOpen ? <X size={28} /> : <Menu size={28} />}
-        </button>
-      </header>
-
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {menuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 z-40 bg-[var(--deep)] pt-24 px-6 md:px-10 lg:px-[58px] flex flex-col gap-8 md:hidden"
-          >
-            <nav className="flex flex-col gap-6 text-2xl font-black uppercase tracking-tight text-white mt-12">
-              <SectionLink className="hover:text-[var(--teal)] transition-colors" id="about" onClick={closeMenu}>About</SectionLink>
-              <SectionLink className="hover:text-[var(--teal)] transition-colors" id="services" onClick={closeMenu}>Services</SectionLink>
-              <SectionLink className="hover:text-[var(--teal)] transition-colors" id="work" onClick={closeMenu}>Work</SectionLink>
-              <SectionLink className="hover:text-[var(--teal)] transition-colors" id="clients" onClick={closeMenu}>Clients</SectionLink>
-              <SectionLink className="hover:text-[var(--teal)] transition-colors" id="contact" onClick={closeMenu}>Contact</SectionLink>
-            </nav>
-            <div className="mt-auto mb-12">
-              <p className="text-[var(--teal)] text-sm font-bold tracking-widest uppercase mb-4">Connect</p>
-              <SectionLink id="contact" className="text-white font-bold" onClick={closeMenu}>Start a conversation <ArrowUpRight size={16} className="inline" /></SectionLink>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <section id="home" className="relative h-screen min-h-[500px] md:min-h-[700px] flex flex-col justify-center bg-[var(--deep)] text-[var(--mint)] px-6 md:px-10 lg:px-[58px] overflow-hidden">
-        {/* Animated Background Elements */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-           <motion.div animate={{ rotate: 360, scale: [1, 1.1, 1] }} transition={{ duration: 30, repeat: Infinity, ease: "linear" }} className="absolute -top-[20%] -right-[10%] w-[70vw] h-[70vw] rounded-full bg-[var(--teal)] opacity-20 blur-[140px] mix-blend-screen" />
-           <motion.div animate={{ rotate: -360, scale: [1, 1.2, 1] }} transition={{ duration: 40, repeat: Infinity, ease: "linear" }} className="absolute -bottom-[20%] -left-[10%] w-[60vw] h-[60vw] rounded-full bg-[var(--rich)] opacity-40 blur-[120px] mix-blend-screen" />
-        </div>
-        
-        <div className="absolute inset-0 bg-[url('/noise.svg')] opacity-20 mix-blend-overlay pointer-events-none" />
-
-        <motion.div style={{ y: heroY, opacity: heroOpacity }} className="relative z-10 pt-24">
-          <div className="flex justify-between text-[9px] uppercase tracking-[0.15em] font-bold text-[rgba(253,251,247,0.7)] mb-16">
-            <span>DEALPOST / CREATIVE + STRATEGY</span>
-          </div>
-          
-          <Reveal delay={0.2}><p className="text-[var(--teal)] text-[11px] tracking-widest uppercase font-bold mb-6">The all-in-one marketing hub</p></Reveal>
-          <Reveal delay={0.4}>
-            <h1 className="text-6xl md:text-8xl lg:text-[140px] font-black tracking-tighter leading-[0.85] max-w-6xl">
-              Great Design<br />
-              <em className="text-[var(--teal)] not-italic">has Creativity</em><br />
-              and Strategy<span className="text-[var(--teal)]">.</span>
-            </h1>
-          </Reveal>
-        </motion.div>
-        
-        <div className="absolute bottom-12 left-6 md:left-10 lg:left-[58px] right-6 md:right-10 lg:right-[58px] flex justify-between text-[9px] uppercase tracking-[0.15em] font-bold z-10 border-t border-[rgba(255,255,255,0.1)] pt-6">
-          <span className="flex items-center gap-2">Scroll to explore <motion.div animate={{ y: [0, 5, 0] }} transition={{ duration: 2, repeat: Infinity }}><ArrowDown size={14} /></motion.div></span>
-          <span className="hidden md:block">Branding · Digital · Consulting</span>
-        </div>
-      </section>
-
-      <InfiniteMarquee text="Dealpost — Creative + Strategy — Brand Narratives — " speed={70} />
-
-      <section id="about" className="py-32 px-6 md:px-10 lg:px-[58px] min-h-screen relative">
-        <div className="flex justify-between text-[9px] uppercase tracking-[0.15em] font-bold text-[rgba(6,33,22,0.5)] mb-24 border-b border-[var(--line)] pb-4">
-          <span>01 / Introduction</span>
-          <span>Creativity + Strategy</span>
-        </div>
-        
-        <div className="grid lg:grid-cols-[1fr_3fr_1.5fr] gap-12 items-center">
-          <div className="text-[var(--teal)] text-[120px] md:text-[200px] leading-[0.5] font-black">“</div>
-          <Reveal>
-            <h2 className="text-4xl md:text-6xl lg:text-8xl font-black tracking-tighter leading-[0.9]">
-              Great Design<br />
-              <em className="text-[var(--teal)] not-italic">has Creativity</em><br />
-              and Strategy<span className="text-[var(--teal)]">.</span>
-            </h2>
-          </Reveal>
-          <Reveal delay={0.3} className="self-end pb-8">
-            <p className="text-sm leading-relaxed opacity-70 mb-8 border-l-2 border-[var(--teal)] pl-6">
-              Great design, by harmonising creativity and strategy, not only captivates viewers, but also promotes engagement and helps directly to meeting business goals.
-            </p>
-          </Reveal>
-        </div>
-      </section>
-
-      <section id="what-we-do" className="py-32 px-6 md:px-10 lg:px-[58px] bg-[var(--ink)] text-[var(--mint)] relative">
-        <div className="flex justify-between text-[9px] uppercase tracking-[0.15em] font-bold text-[rgba(253,251,247,0.5)] mb-24 border-b border-[rgba(253,251,247,0.1)] pb-4">
-          <span>03 / What we do</span>
-          <span>More than an agency</span>
-        </div>
-        
-        <div className="grid lg:grid-cols-[1fr_2fr] gap-24">
-          <Reveal>
-            <h2 className="text-5xl md:text-7xl lg:text-9xl font-black tracking-tighter leading-none sticky top-32">
-              More than<br />
-              <em className="text-[var(--teal)] not-italic">an agency</em><span className="text-[var(--teal)]">.</span>
-            </h2>
-          </Reveal>
-          
-          <div className="flex flex-col gap-8">
-            {[
-              ["01", "Collaborative Extension", "Dealpost acts as an integrated extension of your team, fostering collaboration for a unified approach to marketing success."],
-              ["02", "All-Encompassing Solutions", "A holistic suite of marketing solutions, covering creative, branding, digital strategies, and more, all conveniently available under one roof."],
-              ["03", "All-in-One Marketing Hub", "A comprehensive marketing hub, from creative ideation to strategic implementation, find everything you need for marketing success."]
-            ].map(([num, title, desc], i) => (
-              <Reveal key={num} delay={i * 0.15}>
-                <div className="group bg-[rgba(253,251,247,0.02)] border border-[rgba(253,251,247,0.05)] hover:bg-[rgba(253,251,247,0.05)] hover:border-[var(--teal)] transition-all duration-500 rounded-xl p-10 backdrop-blur-sm relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--teal)] rounded-full mix-blend-screen opacity-0 group-hover:opacity-10 blur-3xl transition-opacity duration-500" />
-                  <span className="text-[var(--teal)] text-sm font-bold block mb-4">{num}</span>
-                  <h3 className="text-3xl md:text-4xl font-black tracking-tight mb-4">{title}</h3>
-                  <p className="opacity-60 text-sm leading-relaxed max-w-xl">{desc}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <Services />
-      <WorkRail />
+    <main className="bg-[#0E544C] min-h-screen selection:bg-[#138F84] selection:text-white">
+      <Loader />
+      <Navigation />
+      <Hero />
+      <Intro />
+      <Ecosystem />
+      <Performance />
+      <SocialFeed />
+      <Technology />
+      <Podcast />
+      <Projects />
       <Clients />
-
-      {/* PHILOSOPHY */}
-      <section className="py-32 px-6 md:px-10 lg:px-[58px] bg-[var(--ink)] text-[var(--mint)] min-h-screen relative overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80vw] aspect-square border border-[rgba(212,175,55,0.15)] rounded-full pointer-events-none" />
-        <div className="absolute top-[10%] left-1/2 -translate-x-1/2 w-[60vw] aspect-square border border-[rgba(212,175,55,0.1)] rounded-full pointer-events-none" />
-        <div className="flex justify-between text-[9px] uppercase tracking-[0.15em] font-bold text-[rgba(253,251,247,0.5)] mb-24 border-b border-[rgba(253,251,247,0.1)] pb-4">
-          <span>07 / Philosophy</span>
-          <span>Creativity + Strategy</span>
-        </div>
-        <div className="flex flex-col gap-24 ml-[8%] relative z-10">
-          {[
-            { text: ["Creativity", <em key="n" className="text-[var(--teal)] not-italic">needs</em>, "direction."], delay: 0 },
-            { text: ["Strategy", <em key="n" className="text-[var(--teal)] not-italic">needs</em>, "imagination."], delay: 0.15, indent: true },
-            { text: ["We bring", <em key="n" className="text-[var(--teal)] not-italic">both</em>, "together."], delay: 0.3 },
-          ].map((line, i) => (
-            <Reveal key={i} delay={line.delay}>
-              <p className={`text-4xl md:text-6xl lg:text-[85px] font-black tracking-tighter leading-none ${line.indent ? "ml-8 md:ml-[16%]" : ""}`}>
-                {line.text.map((part, j) => typeof part === "string" ? <span key={j}>{part} </span> : part)}
-              </p>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
-      {/* PERSONALITY */}
-      <section className="py-32 px-6 md:px-10 lg:px-[58px] bg-[var(--mint)] text-[var(--ink)] relative overflow-hidden">
-        <div className="flex justify-between text-[9px] uppercase tracking-[0.15em] font-bold text-[rgba(6,33,22,0.5)] mb-16 border-b border-[var(--line)] pb-4">
-          <span>08 / Personality</span>
-          <span>Powerful / Human</span>
-        </div>
-        <div className="relative flex items-center justify-center min-h-[600px]">
-          <motion.div 
-            className="w-48 h-48 rounded-full bg-[var(--teal)] flex items-center justify-center text-[var(--ink)] font-black text-8xl relative z-10 cursor-default select-none"
-            animate={{ scale: [1, 1.05, 1], boxShadow: ["0 0 40px rgba(212,175,55,0.3)", "0 0 80px rgba(212,175,55,0.5)", "0 0 40px rgba(212,175,55,0.3)"] }}
-            transition={{ duration: 3, repeat: Infinity }}
-          >d</motion.div>
-          {[
-            { text: "POWERFUL", pos: "top-[18%] left-[8%]", color: "" },
-            { text: "FRIENDLY", pos: "top-[28%] right-[6%]", color: "text-[var(--teal)]" },
-            { text: "PLAYFUL", pos: "bottom-[18%] left-[14%]", color: "" },
-            { text: "KNOWLEDGEABLE", pos: "bottom-[28%] right-[4%]", color: "text-[var(--teal)]" },
-          ].map(({ text, pos, color }) => (
-            <Reveal key={text}>
-              <p className={`absolute ${pos} text-2xl md:text-4xl lg:text-5xl font-black tracking-tight ${color}`}>{text}</p>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
-      <section id="contact" className="py-32 px-6 md:px-10 lg:px-[58px] bg-[var(--ink)] text-[var(--mint)] min-h-screen flex flex-col justify-center border-t border-[rgba(253,251,247,0.1)]">
-
-        <div className="grid lg:grid-cols-2 gap-24 items-center">
-          <Reveal>
-            <h2 className="text-6xl md:text-8xl lg:text-[110px] font-black tracking-tighter leading-[0.85]">
-              Let's<br />
-              <em className="text-[var(--teal)] not-italic">make</em><br />
-              something<br />
-              memorable<span className="text-[var(--teal)]">.</span>
-            </h2>
-          </Reveal>
-          
-          <Reveal delay={0.3}>
-            <ContactForm />
-          </Reveal>
-        </div>
-      </section>
-
-      <footer className="bg-[var(--deep)] text-white py-16 px-6 md:px-10 lg:px-[58px] border-t border-[rgba(255,255,255,0.1)]">
-        <div className="flex flex-col md:flex-row justify-between items-start gap-12 pb-16 border-b border-[rgba(255,255,255,0.1)]">
-          <div>
-            <Logo light />
-            <p className="mt-8 font-bold text-lg opacity-80">Architects of<br />Unique Brand Narratives.</p>
-          </div>
-          <MagneticLink id="top" className="text-xs uppercase tracking-widest font-bold opacity-70 hover:opacity-100 hover:text-[var(--teal)] flex items-center gap-2">
-            Back to top <MoveUpRight size={16} />
-          </MagneticLink>
-        </div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 pt-16 opacity-60 text-xs font-bold uppercase tracking-widest">
-          <div className="flex flex-col gap-4">
-            <span className="text-[var(--teal)] mb-2">Navigate</span>
-            <SectionLink id="about" className="hover:text-white">About</SectionLink>
-            <SectionLink id="services" className="hover:text-white">Services</SectionLink>
-            <SectionLink id="work" className="hover:text-white">Work</SectionLink>
-          </div>
-          <div className="flex flex-col gap-4">
-            <span className="text-[var(--teal)] mb-2">Connect</span>
-            <a href="https://dealpost.co.in" target="_blank" rel="noreferrer" className="hover:text-white">dealpost.co.in</a>
-            <SectionLink id="contact" className="hover:text-white">Start a conversation</SectionLink>
-          </div>
-          <div className="lg:col-span-2 flex flex-col justify-end lg:text-right gap-2">
-            <p>Chennai / India</p>
-            <p>© {new Date().getFullYear()} Dealpost</p>
-          </div>
-        </div>
-      </footer>
+      <Founder />
+      <Contact />
+      <Footer />
     </main>
   );
 }
