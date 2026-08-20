@@ -684,8 +684,8 @@ function Projects() {
             className="flex-shrink-0 w-[300px] md:w-[500px] group cursor-pointer"
           >
             <div className="aspect-[4/5] rounded-[30px] p-8 flex flex-col justify-between mb-8 shadow-md transition-transform duration-500 group-hover:-translate-y-4 relative overflow-hidden bg-[#0E544C]">
-              <div className="absolute inset-0 bg-cover bg-center opacity-40 mix-blend-overlay transition-transform duration-1000 group-hover:scale-110" style={{ backgroundImage: `url(${project.image})` }} />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#061F1C] via-transparent to-transparent opacity-90" />
+              <div className="absolute inset-0 bg-cover bg-center opacity-80 transition-transform duration-1000 group-hover:scale-110" style={{ backgroundImage: `url(${project.image})` }} />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#061F1C] via-[#061F1C]/40 to-transparent opacity-90" />
               <div className="relative z-10 flex justify-between items-start text-white">
                 <span className="text-[10px] font-bold uppercase tracking-widest opacity-90">CASE STUDY</span>
                 <ArrowUpRight size={24} className="opacity-0 group-hover:opacity-100 transition-opacity text-[#138F84]" />
@@ -748,11 +748,12 @@ function Clients() {
           {clientsData.map((client, i) => (
             <Reveal key={client.name} delay={i * 0.05} className="group cursor-pointer">
               <div className="aspect-square relative overflow-hidden rounded-2xl bg-[#F3FAF7] flex flex-col justify-end p-4 border border-[rgba(14,84,76,0.1)] shadow-sm group-hover:border-[#138F84] transition-colors">
-                <div className="absolute inset-0 bg-cover bg-center opacity-0 group-hover:opacity-20 transition-opacity duration-500" style={{ backgroundImage: `url(${client.image})` }} />
-                <div className="relative z-10">
-                  <h4 className="font-black text-sm md:text-base leading-tight uppercase tracking-tight text-[#061F1C]">{client.name}</h4>
+                <div className="absolute inset-0 bg-cover bg-center opacity-100 transition-transform duration-500 group-hover:scale-110" style={{ backgroundImage: `url(${client.image})` }} />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#061F1C] via-transparent to-transparent opacity-70" />
+                <div className="relative z-10 text-white">
+                  <h4 className="font-black text-sm md:text-base leading-tight uppercase tracking-tight drop-shadow-md">{client.name}</h4>
                   <div className="h-0 overflow-hidden group-hover:h-auto transition-all duration-300">
-                    <span className="text-[8px] font-bold tracking-widest mt-2 block text-[#138F84] uppercase">{client.type}</span>
+                    <span className="text-[8px] font-bold tracking-widest mt-2 block text-[#138F84] uppercase drop-shadow-md">{client.type}</span>
                   </div>
                 </div>
               </div>
@@ -784,7 +785,7 @@ function Founder() {
             </div>
             <div>
               <strong className="block text-xl font-black tracking-widest uppercase">HARIHARAN J V</strong>
-              <span className="text-[10px] uppercase tracking-widest font-bold text-[#138F84]">CO-FOUNDER — DEALPOST</span>
+              <span className="text-[10px] uppercase tracking-widest font-bold text-[#138F84]">FOUNDER — DEALPOST</span>
             </div>
           </div>
         </Reveal>
