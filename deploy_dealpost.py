@@ -21,10 +21,18 @@ if paths and paths[0]:
     sftp = client.open_sftp()
     local_path = 'c:/Users/Hp/Downloads/dealpost-brand-narratives-d5e/client/pages/Index.tsx'
     sftp.put(local_path, target_path)
+    
+    project_root = target_path.split('/client/pages/Index.tsx')[0]
+    server_path = project_root + '/server/routes/contact.ts'
+    local_server = 'c:/Users/Hp/Downloads/dealpost-brand-narratives-d5e/server/routes/contact.ts'
+    print(f"Uploading to {server_path}...")
+    try:
+        sftp.put(local_server, server_path)
+    except Exception as e:
+        print("Failed to upload server route:", e)
+        
     sftp.close()
     
-    # Get project root
-    project_root = target_path.split('/client/pages/Index.tsx')[0]
     print(f"Project root: {project_root}")
     
     # Build and restart
