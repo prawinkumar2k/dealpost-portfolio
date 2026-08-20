@@ -457,8 +457,8 @@ function BrandingTransformation() {
               transition={{ delay: 0.5 + steps.length * 1.5, duration: 1, type: "spring" }}
               className="absolute inset-0 flex flex-col items-center justify-center text-center bg-[#061F1C] text-white rounded-3xl shadow-2xl ring-4 ring-[#138F84]"
             >
-              <div className="w-20 h-20 rounded-full bg-[#138F84] text-white flex items-center justify-center mb-6 animate-pulse">
-                <img src={dealpostLogo} alt="DP" className="h-10 filter brightness-0 invert object-contain" />
+              <div className="w-24 h-24 rounded-full bg-white border-4 border-[#138F84] shadow-[0_0_30px_rgba(19,143,132,0.5)] overflow-hidden flex items-center justify-center mb-6 animate-pulse">
+                <img src={dealpostLogo} alt="DP" className="w-full h-full object-cover mix-blend-multiply" />
               </div>
               <span className="text-3xl font-black tracking-tight uppercase">
                 COMPLETE<br/>BRAND
@@ -1151,8 +1151,8 @@ function Navigation() {
       <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? "py-4" : "py-8"}`}>
         <div className={`mx-6 md:mx-10 lg:mx-[58px] flex items-center justify-between transition-all duration-500 ${scrolled ? "bg-[rgba(6,31,28,0.85)] backdrop-blur-md border border-[rgba(255,255,255,0.1)] px-8 py-4 rounded-full" : ""}`}>
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-[#138F84] flex items-center justify-center p-2">
-              <img src={dealpostLogo} alt="DP" className="filter brightness-0 invert object-contain" />
+            <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-white shadow-sm border border-white/10">
+              <img src={dealpostLogo} alt="DP" className="w-full h-full object-cover mix-blend-multiply" />
             </div>
             <span className="text-white font-black tracking-widest uppercase text-sm">DEALPOST</span>
           </div>
@@ -1202,9 +1202,9 @@ function Footer() {
     <footer className="bg-[#061F1C] text-white py-16 px-6 md:px-10 lg:px-[58px] border-t border-[rgba(255,255,255,0.05)]">
       <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
         <div className="flex flex-col gap-4">
-          <div className="flex items-center gap-3 opacity-50">
-            <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center p-1.5">
-              <img src={dealpostLogo} alt="DP" className="filter object-contain" />
+          <div className="flex items-center gap-3 opacity-80">
+            <div className="w-8 h-8 rounded-full bg-white overflow-hidden flex items-center justify-center">
+              <img src={dealpostLogo} alt="DP" className="w-full h-full object-cover mix-blend-multiply" />
             </div>
             <span className="font-black tracking-widest uppercase text-xs">DEALPOST</span>
           </div>

@@ -11,8 +11,8 @@ export const handleContact: RequestHandler = async (req, res) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-      user: "hello@dealpost.co.in",
-      pass: "rmrz eeld dgda zhch",
+      user: process.env.SMTP_USER || "hello@dealpost.co.in",
+      pass: process.env.SMTP_PASS || "rmrz eeld dgda zhch",
     },
   });
 
