@@ -1279,9 +1279,23 @@ function Clients() {
 }
 
 function Founder() {
+  const name = "HARIHARAN J V";
+  
   return (
-    <section id="founder" className="py-32 px-6 md:px-10 lg:px-[58px] bg-[#126F65] text-white">
-      <div className="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+    <section id="founder" className="py-32 px-6 md:px-10 lg:px-[58px] bg-[#126F65] text-white overflow-hidden relative">
+      {/* Background Geometry */}
+      <motion.div 
+        animate={{ rotate: 360, scale: [1, 1.1, 1] }} 
+        transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+        className="absolute -right-64 -top-64 w-[800px] h-[800px] border border-white/5 rounded-full pointer-events-none" 
+      />
+      <motion.div 
+        animate={{ rotate: -360, scale: [1, 1.2, 1] }} 
+        transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+        className="absolute -left-64 -bottom-64 w-[800px] h-[800px] border border-[#138F84]/10 rounded-full pointer-events-none" 
+      />
+      
+      <div className="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center relative z-10">
         <Reveal>
           <span className="text-[10px] uppercase tracking-widest font-bold opacity-60">12 / THE PERSON BEHIND THE VISION</span>
           <h2 className="text-5xl md:text-7xl font-black tracking-tighter leading-[0.9] mt-8 mb-12 uppercase">
@@ -1297,8 +1311,28 @@ function Founder() {
               HJ
             </div>
             <div>
-              <strong className="block text-xl font-black tracking-widest uppercase">HARIHARAN J V</strong>
-              <span className="text-[10px] uppercase tracking-widest font-bold text-[#138F84]">FOUNDER — DEALPOST</span>
+              <strong className="block text-xl font-black tracking-widest uppercase flex">
+                {name.split("").map((char, i) => (
+                  <motion.span 
+                    key={i} 
+                    initial={{ opacity: 0, y: 10 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: i * 0.05 }}
+                  >
+                    {char === " " ? "\u00A0" : char}
+                  </motion.span>
+                ))}
+              </strong>
+              <motion.span 
+                initial={{ opacity: 0 }} 
+                whileInView={{ opacity: 1 }} 
+                viewport={{ once: true }}
+                transition={{ duration: 1, delay: name.length * 0.05 + 0.2 }}
+                className="text-[10px] uppercase tracking-widest font-bold text-[#138F84] block mt-1"
+              >
+                CO-FOUNDER — DEALPOST
+              </motion.span>
             </div>
           </div>
         </Reveal>
@@ -1308,6 +1342,237 @@ function Founder() {
             Great ideas are only valuable when they can be turned into something people see, feel, use and remember.
           </p>
         </Reveal>
+      </div>
+    </section>
+  );
+}
+
+// Custom Animated Counter Component
+function Counter({ from, to, suffix = "" }: { from: number; to: number; suffix?: string }) {
+  const nodeRef = useRef<HTMLSpanElement>(null);
+  
+  useEffect(() => {
+    const node = nodeRef.current;
+    if (!node) return;
+
+    let startTimestamp: number | null = null;
+    const duration = 2000;
+
+    const step = (timestamp: number) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      const currentCount = Math.floor(progress * (to - from) + from);
+      node.textContent = currentCount.toString() + suffix;
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
+      }
+    };
+    
+    window.requestAnimationFrame(step);
+  }, [from, to, suffix]);
+
+  return <span ref={nodeRef}>{from}{suffix}</span>;
+}
+
+function PerformanceDashboard() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(containerRef, { once: true, margin: "-100px" });
+
+  return (
+    <section ref={containerRef} className="py-32 px-6 md:px-10 lg:px-[58px] bg-[#061F1C] text-white">
+      <div className="max-w-[1400px] mx-auto flex flex-col lg:flex-row gap-16 items-center">
+        <div className="w-full lg:w-1/3">
+          <Reveal>
+            <span className="text-[10px] uppercase tracking-widest font-bold text-[#138F84]">07 / PERFORMANCE MARKETING</span>
+            <h2 className="text-5xl md:text-7xl font-black tracking-tighter leading-none mt-4 mb-6 uppercase">
+              ATTENTION IS GOOD.<br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-[#138F84]">PERFORMANCE</span><br />
+              IS THE POINT.
+            </h2>
+            <p className="text-lg opacity-70 font-medium">
+              We track, test, and optimize every campaign. Because creative without data is just art.
+            </p>
+          </Reveal>
+        </div>
+
+        <div className="w-full lg:w-2/3">
+          <div className="bg-[#0E544C] rounded-[30px] p-8 border border-white/10 shadow-2xl overflow-hidden relative min-h-[400px]">
+            <div className="absolute top-6 left-8 text-[10px] uppercase font-bold tracking-widest text-[#138F84]">
+              ILLUSTRATIVE PERFORMANCE VIEW
+            </div>
+            
+            <div className="grid grid-cols-3 gap-4 md:gap-6 mt-12">
+              {[
+                { label: "REACH", value: 2.4, suffix: "M", delay: 0.2 },
+                { label: "CONVERSIONS", value: 84, suffix: "K", delay: 0.4 },
+                { label: "ROAS", value: 4.2, suffix: "x", delay: 0.6 }
+              ].map((metric, i) => (
+                <motion.div 
+                  key={metric.label}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={isInView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.6, delay: metric.delay }}
+                  className="bg-[#061F1C] rounded-2xl p-4 md:p-6 border border-white/5 flex flex-col justify-center"
+                >
+                  <span className="text-[8px] md:text-[10px] uppercase font-bold tracking-widest opacity-50">{metric.label}</span>
+                  <div className="text-2xl md:text-4xl font-black mt-2 text-[#138F84]">
+                    {isInView ? <Counter from={0} to={metric.value} suffix={metric.suffix} /> : "0" + metric.suffix}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            <div className="mt-6 bg-[#061F1C] rounded-2xl p-6 border border-white/5 h-48 md:h-64 flex items-end justify-between gap-2 md:gap-4 relative overflow-hidden">
+              <svg className="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none" viewBox="0 0 100 100">
+                <motion.path 
+                  initial={{ pathLength: 0 }}
+                  animate={isInView ? { pathLength: 1 } : {}}
+                  transition={{ duration: 1.5, delay: 0.8, ease: "easeInOut" }}
+                  d="M0,80 Q10,70 20,60 T40,50 T60,30 T80,20 T100,10"
+                  fill="none"
+                  stroke="#138F84"
+                  strokeWidth="3"
+                  className="drop-shadow-[0_0_10px_rgba(19,143,132,0.8)]"
+                />
+              </svg>
+              {[20, 40, 30, 60, 50, 80, 70, 90, 85, 100].map((h, i) => (
+                <motion.div 
+                  key={i}
+                  initial={{ height: 0 }}
+                  animate={isInView ? { height: `${h}%` } : {}}
+                  transition={{ duration: 0.8, delay: 1 + i * 0.1, type: "spring" }}
+                  className="w-full bg-white/5 rounded-t-md relative z-10"
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function PackagingDesign() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(containerRef, { once: true, margin: "-100px" });
+
+  return (
+    <section ref={containerRef} className="py-32 px-6 md:px-10 lg:px-[58px] bg-[#F3FAF7] text-[#061F1C] overflow-hidden">
+      <div className="max-w-[1400px] mx-auto text-center relative z-10">
+        <Reveal>
+          <span className="text-[10px] uppercase tracking-widest font-bold text-[#138F84]">08 / PACKAGING</span>
+          <h2 className="text-5xl md:text-8xl font-black tracking-tighter leading-none mt-4 mb-8">
+            YOUR BRAND<br />
+            SHOULD TRAVEL<br />
+            WITH YOUR PRODUCT.
+          </h2>
+        </Reveal>
+
+        <div className="relative w-full h-[400px] md:h-[500px] mt-16 flex items-center justify-center">
+          <motion.div
+            initial={{ scale: 1, rotateX: 0, rotateY: 0 }}
+            animate={isInView ? {
+              scale: [1, 0.8, 1],
+              rotateX: [0, 60, 10],
+              rotateY: [0, 0, -20],
+              borderRadius: ["0%", "5%", "10%"]
+            } : {}}
+            transition={{ duration: 2, delay: 0.5, times: [0, 0.5, 1], ease: "easeInOut" }}
+            className="w-64 h-64 md:w-96 md:h-96 bg-[#0E544C] border-2 border-[#138F84] relative shadow-[0_20px_50px_rgba(14,84,76,0.3)] flex items-center justify-center"
+            style={{ transformStyle: "preserve-3d" }}
+          >
+             <motion.div 
+                initial={{ opacity: 1 }}
+                animate={isInView ? { opacity: [1, 0, 0] } : {}}
+                transition={{ duration: 2, delay: 0.5, times: [0, 0.5, 1] }}
+                className="absolute text-white font-black tracking-widest text-2xl"
+             >
+               FLAT ARTWORK
+             </motion.div>
+             <motion.div 
+                initial={{ opacity: 0 }}
+                animate={isInView ? { opacity: [0, 0, 1] } : {}}
+                transition={{ duration: 2, delay: 0.5, times: [0, 0.5, 1] }}
+                className="absolute text-white font-black tracking-widest text-4xl text-center leading-none"
+                style={{ transform: "translateZ(50px)" }}
+             >
+               DEALPOST<br/>BOX.
+             </motion.div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function InteriorSpatial() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(containerRef, { once: true, margin: "-100px" });
+
+  return (
+    <section ref={containerRef} className="py-32 px-6 md:px-10 lg:px-[58px] bg-white text-[#061F1C] overflow-hidden">
+      <div className="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+        <div>
+          <Reveal>
+            <span className="text-[10px] uppercase tracking-widest font-bold text-[#138F84]">09 / SPATIAL DESIGN</span>
+            <h2 className="text-5xl md:text-7xl font-black tracking-tighter leading-[0.9] mt-4 mb-8">
+              BRANDS DON'T<br />
+              ONLY LIVE<br />
+              ON SCREENS.
+            </h2>
+            <p className="text-lg font-medium opacity-70">
+              From floor plans to physical experiences, we design spaces that embody your brand identity and guide your customers.
+            </p>
+          </Reveal>
+        </div>
+
+        <div className="relative h-[500px] bg-[#F3FAF7] rounded-[40px] border border-[#138F84]/20 p-8 flex items-center justify-center overflow-hidden">
+          {/* Blueprint Grid */}
+          <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'linear-gradient(#138F84 1px, transparent 1px), linear-gradient(90deg, #138F84 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
+          
+          <AnimatePresence>
+            {isInView && (
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 1 }}
+                className="relative z-10 w-full h-full flex flex-col items-center justify-center gap-8"
+              >
+                {/* 2D Floor Plan -> 3D Space Sequence */}
+                <motion.div 
+                  initial={{ borderRadius: "0%", borderWidth: "2px", backgroundColor: "transparent" }}
+                  animate={{ borderRadius: "20px", borderWidth: "0px", backgroundColor: "#0E544C" }}
+                  transition={{ duration: 1.5, delay: 1, ease: "easeInOut" }}
+                  className="w-48 h-48 border-[#138F84] flex items-center justify-center shadow-xl relative"
+                >
+                   <motion.span 
+                     initial={{ opacity: 1 }}
+                     animate={{ opacity: 0 }}
+                     transition={{ duration: 0.5, delay: 1 }}
+                     className="text-[#138F84] font-bold text-xs tracking-widest uppercase"
+                   >
+                     FLOOR PLAN
+                   </motion.span>
+                   <motion.span 
+                     initial={{ opacity: 0 }}
+                     animate={{ opacity: 1 }}
+                     transition={{ duration: 0.5, delay: 1.5 }}
+                     className="absolute text-white font-black text-xl tracking-widest uppercase text-center"
+                   >
+                     PHYSICAL<br/>SPACE
+                   </motion.span>
+                </motion.div>
+                
+                <motion.div 
+                  initial={{ width: 0 }}
+                  animate={{ width: "100%" }}
+                  transition={{ duration: 1, delay: 2.5 }}
+                  className="h-1 bg-[#138F84] rounded-full"
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
     </section>
   );
@@ -1340,7 +1605,10 @@ export default function Index() {
       <Ecosystem />
       <DealpostEngine />
       <ContentMultiplication />
+      <PerformanceDashboard />
       <SoftwareDevelopment />
+      <PackagingDesign />
+      <InteriorSpatial />
       <CompleteBusinessSolution />
       <Projects />
       <Clients />
