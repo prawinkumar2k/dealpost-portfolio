@@ -646,18 +646,18 @@ function Footer() {
 
 function Projects() {
   const projects = [
-    { title: "TIDEL", category: "REBRANDING / BRAND IDENTITY", desc: "Monogram, Wordmark, Business Cards, Signage, Digital Display, Uniform, Stationery", image: "/project7.png" },
-    { title: "CHENNAI AEROSPACE PARK", category: "BRAND IDENTITY", desc: "Logo, Monogram, Wordmark, Brand system, Applications", image: "/project2.png" },
-    { title: "TAMIL NADU TOURISM", category: "BRAND IDENTITY / COMMUNICATION", desc: "Sketches, Logo concepts, Identity, Applications, Campaign work", image: "/project3.png" },
-    { title: "KINGSFORD", category: "BRANDING & DIGITAL", desc: "Branding, Brochure, Marketing, Campaign, Website, Digital experience", image: "/project8.png" },
-    { title: "VALENCIA", category: "IDENTITY & MARKETING", desc: "Identity, Fingerprint/heart concept, Brochure, Marketing collateral", image: "/project10.png" },
-    { title: "MADURAI SMART CITY", category: "PROJECT COMMUNICATION", desc: "Brand Identity, Strategy, Applications", image: "/project14.png" },
-    { title: "KOVAI KONGU MESS", category: "RESTAURANT BRANDING", desc: "Logo design, Mascot, Brand colors", image: "/project1.png" },
-    { title: "FOODBAE", category: "RESTAURANT BRANDING", desc: "Logo, Packaging, Marketing Collateral", image: "/project4.png" },
-    { title: "ARENA SPORTS & RESORT", category: "LEISURE BRANDING", desc: "Visual identity, Resort branding", image: "/project5.jpeg" },
-    { title: "CANVASWORKSPACE", category: "SOFTWARE BRANDING", desc: "Logo, Identity system, UI design", image: "/project6.png" },
-    { title: "LUX", category: "BRAND COMMUNICATION", desc: "Logo, Application, Typography", image: "/project9.png" },
-    { title: "NANO HOSPITALS", category: "HEALTHCARE BRANDING", desc: "Logo, Identity System", image: "/project11.png" },
+    { title: "TIDEL", category: "REBRANDING / BRAND IDENTITY", desc: "Monogram, Wordmark, Business Cards, Signage, Digital Display, Uniform, Stationery, ID cards", image: "/project7.png", featured: true },
+    { title: "CHENNAI AEROSPACE PARK", category: "BRAND IDENTITY", desc: "Logo, Monogram, Wordmark, Brand system, Applications", image: "/project2.png", featured: true },
+    { title: "TAMIL NADU TOURISM", category: "BRAND IDENTITY / COMMUNICATION", desc: "Sketches, Logo concepts, Identity, Applications, Campaign work", image: "/project3.png", featured: true },
+    { title: "MADURAI SMART CITY", category: "PROJECT COMMUNICATION", desc: "Brand Identity, Strategy, Applications", image: "/project14.png", featured: true },
+    { title: "KINGSFORD", category: "BRANDING & DIGITAL", desc: "Branding, Brochure, Marketing, Campaign, Website, Digital experience", image: "/project8.png", featured: false },
+    { title: "VALENCIA", category: "IDENTITY & MARKETING", desc: "Identity, Fingerprint/heart concept, Brochure, Marketing collateral", image: "/project10.png", featured: false },
+    { title: "KOVAI KONGU MESS", category: "RESTAURANT BRANDING", desc: "Logo design, Mascot, Brand colors", image: "/project1.png", featured: false },
+    { title: "FOODBAE", category: "RESTAURANT BRANDING", desc: "Logo, Packaging, Marketing Collateral", image: "/project4.png", featured: false },
+    { title: "ARENA SPORTS & RESORT", category: "LEISURE BRANDING", desc: "Visual identity, Resort branding", image: "/project5.jpeg", featured: false },
+    { title: "CANVASWORKSPACE", category: "SOFTWARE BRANDING", desc: "Logo, Identity system, UI design", image: "/project6.png", featured: false },
+    { title: "LUX", category: "BRAND COMMUNICATION", desc: "Logo, Application, Typography", image: "/project9.png", featured: false },
+    { title: "NANO HOSPITALS", category: "HEALTHCARE BRANDING", desc: "Logo, Identity System", image: "/project11.png", featured: false },
   ];
 
   return (
@@ -681,19 +681,21 @@ function Projects() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: i * 0.1 }}
-            className="flex-shrink-0 w-[300px] md:w-[500px] group cursor-pointer"
+            className={`flex-shrink-0 ${project.featured ? 'w-[400px] md:w-[650px]' : 'w-[300px] md:w-[450px]'} group cursor-pointer`}
           >
-            <div className="aspect-[4/5] rounded-[30px] p-8 flex flex-col justify-between mb-8 shadow-md transition-transform duration-500 group-hover:-translate-y-4 relative overflow-hidden bg-[#0E544C]">
+            <div className={`aspect-[4/5] rounded-[30px] p-8 flex flex-col justify-between mb-8 shadow-md transition-all duration-500 group-hover:-translate-y-4 relative overflow-hidden bg-[#0E544C] ${project.featured ? 'ring-4 ring-[#138F84] shadow-[0_0_40px_rgba(19,143,132,0.3)]' : ''}`}>
               <div className="absolute inset-0 bg-cover bg-center opacity-80 transition-transform duration-1000 group-hover:scale-110" style={{ backgroundImage: `url(${project.image})` }} />
               <div className="absolute inset-0 bg-gradient-to-t from-[#061F1C] via-[#061F1C]/40 to-transparent opacity-90" />
               <div className="relative z-10 flex justify-between items-start text-white">
-                <span className="text-[10px] font-bold uppercase tracking-widest opacity-90">CASE STUDY</span>
-                <ArrowUpRight size={24} className="opacity-0 group-hover:opacity-100 transition-opacity text-[#138F84]" />
+                <span className={`text-[10px] font-bold uppercase tracking-widest ${project.featured ? 'px-3 py-1 bg-[#138F84] rounded-full' : 'opacity-90'}`}>
+                  {project.featured ? '⭐ FLAGSHIP CASE STUDY' : 'CASE STUDY'}
+                </span>
+                <ArrowUpRight size={project.featured ? 32 : 24} className={`opacity-0 group-hover:opacity-100 transition-opacity ${project.featured ? 'text-white' : 'text-[#138F84]'}`} />
               </div>
               <div className="relative z-10 text-white">
-                <h3 className="text-3xl md:text-5xl font-black tracking-tighter leading-none mb-4 uppercase">{project.title}</h3>
-                <div className="text-[10px] uppercase font-bold tracking-widest text-[#138F84] mb-2">{project.category}</div>
-                <p className="text-sm font-medium opacity-80">{project.desc}</p>
+                <h3 className={`${project.featured ? 'text-4xl md:text-7xl' : 'text-3xl md:text-5xl'} font-black tracking-tighter leading-none mb-4 uppercase drop-shadow-lg`}>{project.title}</h3>
+                <div className={`text-[10px] md:text-xs uppercase font-bold tracking-widest ${project.featured ? 'text-white' : 'text-[#138F84]'} mb-2`}>{project.category}</div>
+                <p className={`${project.featured ? 'text-base opacity-100' : 'text-sm opacity-80'} font-medium`}>{project.desc}</p>
               </div>
             </div>
           </motion.div>
