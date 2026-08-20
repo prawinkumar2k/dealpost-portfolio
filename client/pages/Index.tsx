@@ -375,190 +375,276 @@ function Intro() {
 }
 
 function Ecosystem() {
-  const steps = [
-    "BRAND", "CONTENT", "SOCIAL", "CAMPAIGNS", "PERFORMANCE", "DIGITAL", "TECHNOLOGY", "SPACE", "GROWTH"
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "center center"]
+  });
+
+  const nodes = [
+    { id: "brand", label: "BRAND", x: -180, y: -150, details: ["Strategy", "Identity", "Guidelines"] },
+    { id: "social", label: "SOCIAL", x: 180, y: -150, details: ["Instagram", "LinkedIn", "Reels"] },
+    { id: "performance", label: "PERFORMANCE", x: -250, y: 0, details: ["Ads", "PPC", "Analytics"] },
+    { id: "digital", label: "DIGITAL", x: 250, y: 0, details: ["Websites", "UI/UX", "Apps"] },
+    { id: "content", label: "CONTENT", x: -180, y: 150, details: ["Copy", "Video", "Photo"] },
+    { id: "software", label: "SOFTWARE", x: 180, y: 150, details: ["Dashboards", "CMS", "API"] }
   ];
-  
-  return (
-    <section id="services" className="py-40 overflow-hidden bg-[#061F1C] text-white relative">
-      <div className="px-6 md:px-10 lg:px-[58px] mb-24 max-w-[1400px] mx-auto">
-        <Reveal>
-          <span className="text-[10px] uppercase tracking-widest font-bold text-[#138F84]">02 / WHAT WE DO</span>
-          <h2 className="text-4xl md:text-7xl font-black tracking-tighter mt-4 leading-none">
-            WE DON'T JUST<br />PROVIDE SERVICES.
-          </h2>
-          <p className="text-2xl md:text-4xl font-bold text-[#138F84] mt-8 tracking-tight">WE BUILD THE SYSTEM AROUND YOUR BRAND.</p>
-        </Reveal>
-      </div>
 
-      <div className="relative flex flex-nowrap items-center w-[200vw] md:w-auto overflow-x-auto pb-12 hide-scrollbar px-6 md:px-10 lg:px-[58px] gap-8 md:gap-16">
-        {steps.map((step, i) => (
-          <Reveal key={step} delay={i * 0.1} className="flex-shrink-0 flex items-center">
-            <div className="flex flex-col items-center">
-              <div className="w-4 h-4 rounded-full bg-[#138F84] mb-4 relative">
-                <div className="absolute inset-0 rounded-full bg-[#138F84] animate-ping opacity-50" />
-              </div>
-              <strong className="text-2xl md:text-4xl lg:text-6xl font-black tracking-tighter uppercase">{step}</strong>
+  const scale = useTransform(scrollYProgress, [0, 1], [0.8, 1]);
+  const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [0, 0.5, 1]);
+
+  return (
+    <section ref={containerRef} id="services" className="py-32 px-6 md:px-10 lg:px-[58px] bg-white text-[#061F1C] min-h-[120vh] flex flex-col justify-center relative overflow-hidden">
+      <Reveal className="text-center mb-24 relative z-20">
+        <span className="text-[10px] uppercase tracking-widest font-bold text-[#138F84]">02 / ECOSYSTEM</span>
+        <h2 className="text-5xl md:text-8xl font-black tracking-tighter leading-none mt-4 uppercase">
+          One Connected<br />System.
+        </h2>
+      </Reveal>
+
+      <motion.div 
+        style={{ scale, opacity }}
+        className="relative w-full max-w-[800px] aspect-square md:aspect-video mx-auto flex items-center justify-center mt-12"
+      >
+        {/* Connection Lines (SVG) */}
+        <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="-400 -300 800 600" preserveAspectRatio="xMidYMid meet">
+          {nodes.map((node, i) => (
+            <motion.line
+              key={`line-${node.id}`}
+              x1="0" y1="0"
+              x2={node.x} y2={node.y}
+              stroke="#0E544C"
+              strokeWidth="2"
+              strokeDasharray="4 4"
+              initial={{ pathLength: 0, opacity: 0 }}
+              whileInView={{ pathLength: 1, opacity: 0.3 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 1.5, delay: i * 0.1 }}
+            />
+          ))}
+        </svg>
+
+        {/* Center Node */}
+        <motion.div 
+          initial={{ scale: 0 }}
+          whileInView={{ scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ type: "spring", stiffness: 200, damping: 20 }}
+          className="absolute z-20 w-32 h-32 md:w-40 md:h-40 bg-[#0E544C] rounded-full flex items-center justify-center shadow-2xl border-4 border-white cursor-pointer"
+        >
+          <span className="text-white font-black tracking-widest uppercase text-xs md:text-sm">DEALPOST</span>
+        </motion.div>
+
+        {/* Orbiting Nodes */}
+        {nodes.map((node, i) => (
+          <motion.div
+            key={node.id}
+            initial={{ opacity: 0, x: 0, y: 0 }}
+            whileInView={{ opacity: 1, x: node.x, y: node.y }}
+            viewport={{ once: true }}
+            transition={{ type: "spring", stiffness: 100, damping: 15, delay: 0.5 + i * 0.1 }}
+            className="absolute z-10 group cursor-pointer flex flex-col items-center"
+            data-cursor="explore"
+          >
+            <div className="w-20 h-20 md:w-24 md:h-24 bg-white rounded-full flex items-center justify-center shadow-xl border border-[#138F84]/20 transition-all duration-300 group-hover:scale-110 group-hover:border-[#138F84] group-hover:shadow-[0_0_30px_rgba(19,143,132,0.2)]">
+              <span className="font-black text-[10px] md:text-xs tracking-widest text-[#061F1C] group-hover:text-[#138F84] transition-colors">{node.label}</span>
             </div>
-            {i !== steps.length - 1 && (
-              <div className="h-[2px] w-16 md:w-32 bg-gradient-to-r from-[#138F84] to-transparent mx-4 md:mx-8 opacity-50" />
-            )}
-          </Reveal>
+            
+            {/* Hover Details Popup */}
+            <div className="absolute top-full mt-4 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-300 pointer-events-none bg-[#061F1C] text-white p-4 rounded-xl whitespace-nowrap z-30 shadow-2xl">
+              <div className="flex flex-col gap-2">
+                {node.details.map(detail => (
+                  <span key={detail} className="text-[10px] font-bold uppercase tracking-widest opacity-80 flex items-center gap-2">
+                    <span className="w-1 h-1 bg-[#138F84] rounded-full" /> {detail}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </section>
   );
 }
 
-function Performance() {
+function DealpostEngine() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
+
+  const steps = [
+    "STRATEGY", "CREATIVE", "CONTENT", "DISTRIBUTION", 
+    "PERFORMANCE", "DATA", "TECHNOLOGY", "OPTIMISATION", "GROWTH"
+  ];
+
   return (
-    <section id="performance" className="py-32 px-6 md:px-10 lg:px-[58px] bg-[#0E544C] text-white">
-      <div className="max-w-[1400px] mx-auto">
+    <section ref={containerRef} id="performance" className="py-32 px-6 md:px-10 lg:px-[58px] bg-[#0E544C] text-white relative overflow-hidden">
+      <div className="max-w-[1400px] mx-auto relative z-10">
         <Reveal>
-          <h2 className="text-5xl md:text-8xl font-black tracking-tighter leading-none mb-16">
-            ATTENTION<br />
-            IS GOOD.<br />
-            <em className="text-[#138F84] not-italic">PERFORMANCE<br />IS BETTER.</em>
+          <span className="text-[10px] uppercase tracking-widest font-bold text-[#138F84]">03 / THE ENGINE</span>
+          <h2 className="text-5xl md:text-8xl font-black tracking-tighter leading-none mb-24 mt-4">
+            ONE<br />
+            CONNECTED<br />
+            <em className="text-[#138F84] not-italic">SYSTEM.</em>
           </h2>
         </Reveal>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <Reveal delay={0.2} className="text-lg opacity-90 font-medium">
-            <p className="mb-6">Creative gets attention. Performance marketing turns that attention into measurable action.</p>
-            <p>We build campaigns around the complete journey — from audience discovery and creative testing to clicks, leads, conversions and optimisation.</p>
-            
-            <div className="mt-12 flex flex-wrap gap-4">
-              {['Meta Advertising', 'Google Ads', 'Conversion Campaigns', 'Retargeting', 'Analytics'].map(s => (
-                <span key={s} className="px-6 py-3 rounded-full border border-[rgba(255,255,255,0.2)] text-xs font-bold uppercase tracking-widest">{s}</span>
-              ))}
-            </div>
-          </Reveal>
-
-          <Reveal delay={0.4} className="relative">
-            <div className="bg-[#061F1C] p-8 rounded-3xl border border-[rgba(255,255,255,0.1)] shadow-2xl relative overflow-hidden">
-              <div className="absolute top-4 right-6 text-[8px] uppercase tracking-widest text-[#138F84] font-bold opacity-60">ILLUSTRATIVE DASHBOARD</div>
+        <div className="flex flex-col gap-4 max-w-4xl mx-auto">
+          {steps.map((step, i) => (
+            <div key={step} className="flex flex-col md:flex-row items-center gap-4 md:gap-8">
+              <motion.div
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.8, delay: i * 0.15, type: "spring" }}
+                className="bg-[#061F1C] border border-[#138F84]/30 px-8 py-6 rounded-2xl w-full md:w-1/2 flex justify-between items-center group cursor-pointer hover:bg-white hover:text-[#061F1C] transition-colors duration-500"
+                data-cursor="hover"
+              >
+                <span className="text-2xl font-black tracking-tight">{step}</span>
+                <div className="w-2 h-2 rounded-full bg-[#138F84] group-hover:scale-150 transition-transform" />
+              </motion.div>
               
-              <div className="flex items-center gap-4 mb-8 border-b border-[rgba(255,255,255,0.05)] pb-6">
-                <div className="w-3 h-3 rounded-full bg-red-500" />
-                <div className="w-3 h-3 rounded-full bg-yellow-500" />
-                <div className="w-3 h-3 rounded-full bg-green-500" />
-                <span className="text-xs font-bold tracking-widest opacity-50 ml-4">CAMPAIGN_COMMAND_CENTER</span>
-              </div>
-
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                {[
-                  { label: "REACH", value: "2.4M", trend: "+14%" },
-                  { label: "CLICKS", value: "84K", trend: "+22%" },
-                  { label: "LEADS", value: "1,240", trend: "+8%" },
-                  { label: "CONVERSIONS", value: "312", trend: "+45%" },
-                ].map((stat, i) => (
+              {i < steps.length - 1 && (
+                <div className="hidden md:flex flex-1 items-center">
                   <motion.div 
-                    key={stat.label}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.6 + i * 0.1 }}
-                    className="flex flex-col"
-                  >
-                    <span className="text-[10px] uppercase font-bold opacity-60 tracking-widest mb-2">{stat.label}</span>
-                    <strong className="text-3xl font-black tracking-tight">{stat.value}</strong>
-                    <span className="text-[10px] font-bold text-[#138F84] mt-1">{stat.trend}</span>
-                  </motion.div>
-                ))}
-              </div>
-
-              <div className="mt-10 h-32 w-full flex items-end gap-2">
-                {[40, 60, 45, 80, 55, 90, 75, 100, 85, 120].map((h, i) => (
-                  <motion.div 
-                    key={i}
-                    initial={{ height: 0 }}
-                    whileInView={{ height: `${h}%` }}
-                    transition={{ duration: 1, delay: 0.8 + i * 0.05, ease: "easeOut" }}
-                    className="flex-1 bg-gradient-to-t from-[#138F84] to-[#126F65] rounded-t-sm opacity-80"
+                    className="h-[2px] bg-gradient-to-r from-[#138F84] to-transparent w-full origin-left"
+                    initial={{ scaleX: 0 }}
+                    whileInView={{ scaleX: 1 }}
+                    viewport={{ once: true, margin: "-100px" }}
+                    transition={{ duration: 1, delay: i * 0.15 + 0.3 }}
                   />
-                ))}
-              </div>
+                  <motion.div 
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true, margin: "-100px" }}
+                    transition={{ duration: 0.2, delay: i * 0.15 + 1.2 }}
+                  >
+                    <ArrowUpRight className="text-[#138F84] rotate-45" size={24} />
+                  </motion.div>
+                </div>
+              )}
+              
+              {/* Mobile Arrow */}
+              {i < steps.length - 1 && (
+                <motion.div 
+                  className="md:hidden w-[2px] h-8 bg-gradient-to-b from-[#138F84] to-transparent"
+                  initial={{ scaleY: 0 }}
+                  whileInView={{ scaleY: 1 }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ duration: 0.5, delay: i * 0.15 + 0.3 }}
+                />
+              )}
             </div>
-          </Reveal>
+          ))}
         </div>
       </div>
     </section>
   );
 }
 
-function SocialFeed() {
+function ContentMultiplication() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "center center"]
+  });
+
+  const cards = [
+    { label: "INSTAGRAM REEL", rotate: -10, x: -150, y: -50, zIndex: 10, scale: 0.9 },
+    { label: "LINKEDIN POST", rotate: 5, x: 150, y: -80, zIndex: 8, scale: 0.85 },
+    { label: "YOUTUBE SHORT", rotate: -5, x: -100, y: 100, zIndex: 15, scale: 0.95 },
+    { label: "ADVERTISEMENT", rotate: 12, x: 120, y: 120, zIndex: 20, scale: 1 },
+    { label: "WEBSITE HERO", rotate: -2, x: 0, y: -180, zIndex: 5, scale: 1.1 }
+  ];
+
   return (
-    <section id="social" className="py-32 px-6 md:px-10 lg:px-[58px] bg-[#F3FAF7] text-[#061F1C] overflow-hidden">
-      <div className="max-w-[1400px] mx-auto">
+    <section ref={containerRef} id="social" className="py-40 px-6 md:px-10 lg:px-[58px] bg-[#F3FAF7] text-[#061F1C] overflow-hidden min-h-[120vh] relative flex flex-col justify-center">
+      <div className="max-w-[1400px] mx-auto w-full relative z-30 pointer-events-none mb-32">
         <Reveal>
-          <span className="text-[10px] uppercase tracking-widest font-bold text-[#126F65]">03 / SOCIAL MEDIA</span>
-          <h2 className="text-5xl md:text-8xl font-black tracking-tighter leading-none mt-4 mb-16">
-            YOUR BRAND<br />DESERVES A FEED<br />
-            <em className="text-[#138F84] not-italic">WORTH FOLLOWING.</em>
+          <span className="text-[10px] uppercase tracking-widest font-bold text-[#126F65]">04 / CONTENT MULTIPLICATION</span>
+          <h2 className="text-5xl md:text-8xl font-black tracking-tighter leading-none mt-4">
+            START WITH<br />
+            <em className="text-[#138F84] not-italic">ONE IDEA.</em>
           </h2>
         </Reveal>
+      </div>
+      
+      <div className="relative w-full h-[60vh] flex items-center justify-center max-w-[1000px] mx-auto mt-10">
         
-        <div className="flex flex-col lg:flex-row gap-16 items-center">
-          <div className="w-full lg:w-[40%] flex flex-col gap-6 font-medium text-lg opacity-80">
-            <p>Social isn't just about posting. It's about building a recognisable voice, creating content people want to engage with and turning attention into meaningful action.</p>
-            <p>We plan, create, publish, manage and optimise social content around your brand and business goals.</p>
-            
-            <div className="mt-8 space-y-4">
-              <div className="flex items-center gap-4 text-sm font-bold uppercase tracking-widest"><div className="w-2 h-2 bg-[#138F84]" /> CONTENT STRATEGY</div>
-              <div className="flex items-center gap-4 text-sm font-bold uppercase tracking-widest"><div className="w-2 h-2 bg-[#138F84]" /> SHORT-FORM VIDEO / REELS</div>
-              <div className="flex items-center gap-4 text-sm font-bold uppercase tracking-widest"><div className="w-2 h-2 bg-[#138F84]" /> COMMUNITY MANAGEMENT</div>
+        {/* Core Idea */}
+        <motion.div 
+          className="absolute z-50 w-64 h-80 bg-[#061F1C] text-white rounded-3xl shadow-2xl p-8 flex flex-col items-center justify-center border-4 border-[#138F84] cursor-grab active:cursor-grabbing"
+          drag
+          dragConstraints={containerRef}
+          initial={{ scale: 0 }}
+          whileInView={{ scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ type: "spring", damping: 15 }}
+          data-cursor="hover"
+        >
+          <div className="w-12 h-12 rounded-full bg-[#138F84] animate-pulse mb-6 flex items-center justify-center">
+            <Zap className="text-[#061F1C]" size={20} />
+          </div>
+          <span className="font-black text-3xl tracking-tighter uppercase text-center leading-none">CORE<br/>IDEA</span>
+        </motion.div>
+
+        {/* Multiplied Assets */}
+        {cards.map((card, i) => (
+          <motion.div
+            key={card.label}
+            className="absolute bg-white rounded-2xl shadow-[0_20px_50px_rgba(14,84,76,0.15)] border border-[rgba(14,84,76,0.05)] w-56 h-72 p-6 flex flex-col justify-between cursor-grab active:cursor-grabbing hover:shadow-[0_20px_50px_rgba(19,143,132,0.3)] transition-shadow"
+            drag
+            dragConstraints={containerRef}
+            initial={{ x: 0, y: 0, rotate: 0, scale: 0, opacity: 0 }}
+            whileInView={{ x: card.x, y: card.y, rotate: card.rotate, scale: card.scale, opacity: 1 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ type: "spring", damping: 20, delay: 0.5 + i * 0.15 }}
+            style={{ zIndex: card.zIndex }}
+            data-cursor="explore"
+          >
+            <div className="flex justify-between items-start">
+              <div className="w-8 h-8 rounded-full bg-[#F3FAF7] flex items-center justify-center">
+                <Share2 size={12} className="text-[#138F84]" />
+              </div>
+              <span className="text-[8px] font-bold text-[#138F84] uppercase tracking-widest">{card.label}</span>
             </div>
-          </div>
-          
-          <div className="w-full lg:w-[60%] relative h-[600px] flex justify-center items-center">
-            {/* Fake Dealpost Social Post */}
-            <motion.div 
-              animate={{ y: [-10, 10, -10] }}
-              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-              className="w-[340px] bg-white rounded-3xl shadow-[0_20px_50px_rgba(14,84,76,0.15)] border border-[rgba(14,84,76,0.05)] overflow-hidden z-20 absolute"
-            >
-              <div className="p-4 flex items-center gap-3 border-b border-gray-100">
-                <div className="w-8 h-8 rounded-full bg-[#0E544C] flex items-center justify-center p-2">
-                  <img src={dealpostLogo} alt="DP" className="filter brightness-0 invert object-contain" />
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-xs font-bold">Dealpost</span>
-                  <span className="text-[9px] uppercase tracking-widest opacity-50">Creative Studio</span>
-                </div>
-              </div>
-              <div className="aspect-[4/5] bg-[#0E544C] relative flex items-center justify-center p-8 overflow-hidden group">
-                <motion.div 
-                  animate={{ scale: [1, 1.05, 1] }} 
-                  transition={{ duration: 4, repeat: Infinity }}
-                  className="absolute inset-0 bg-gradient-to-br from-[#126F65] to-[#061F1C]" 
-                />
-                <h3 className="relative z-10 text-white text-4xl font-black tracking-tighter leading-none text-center">
-                  DESIGN<br />THAT WORKS<br />BEYOND<br />THE FEED.
-                </h3>
-              </div>
-              <div className="p-4 flex justify-between items-center bg-gray-50">
-                <div className="flex gap-4 font-bold text-xs opacity-70">
-                  <span>♡ 12.8K</span>
-                  <span>💬 438</span>
-                </div>
-                <span className="text-[10px] font-bold text-[#138F84] uppercase tracking-widest flex items-center gap-1">
-                  REACH ↗ 1.2M
-                </span>
-              </div>
-            </motion.div>
             
-            {/* Background elements */}
-            <motion.div 
-              animate={{ y: [20, -20, 20], rotate: -5 }}
-              transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-              className="w-[300px] h-[400px] bg-[#126F65] rounded-3xl absolute -left-10 opacity-20 blur-sm z-10"
+            <div className="w-full aspect-square bg-[#F3FAF7] rounded-lg mt-4 flex items-center justify-center relative overflow-hidden group">
+              <motion.div 
+                animate={{ scale: [1, 1.1, 1] }} 
+                transition={{ duration: 3 + i, repeat: Infinity }}
+                className="absolute inset-0 bg-[#E8F6F2]" 
+              />
+              <Play className="text-[#138F84] relative z-10 opacity-50 group-hover:opacity-100 transition-opacity group-hover:scale-125 duration-300" size={24} />
+            </div>
+
+            <div className="mt-4 flex gap-2">
+              <div className="h-1 flex-1 bg-[#E8F6F2] rounded-full" />
+              <div className="h-1 w-1/3 bg-[#138F84] rounded-full" />
+            </div>
+          </motion.div>
+        ))}
+
+        {/* Visual connecting lines drawn using SVG */}
+        <svg className="absolute inset-0 w-full h-full pointer-events-none z-0" viewBox="-500 -300 1000 600">
+          {cards.map((card, i) => (
+            <motion.path
+              key={`path-${i}`}
+              d={`M 0 0 Q ${card.x / 2} ${card.y - 100} ${card.x} ${card.y}`}
+              fill="transparent"
+              stroke="#138F84"
+              strokeWidth="2"
+              strokeDasharray="4 4"
+              initial={{ pathLength: 0, opacity: 0 }}
+              whileInView={{ pathLength: 1, opacity: 0.2 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1, delay: 0.5 + i * 0.1 }}
             />
-            <motion.div 
-              animate={{ y: [-20, 20, -20], rotate: 5 }}
-              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-              className="w-[300px] h-[400px] bg-[#138F84] rounded-3xl absolute -right-10 opacity-20 blur-sm z-10"
-            />
-          </div>
-        </div>
+          ))}
+        </svg>
+
       </div>
     </section>
   );
@@ -990,8 +1076,8 @@ export default function Index() {
       <Hero />
       <Intro />
       <Ecosystem />
-      <Performance />
-      <SocialFeed />
+      <DealpostEngine />
+      <ContentMultiplication />
       <Technology />
       <Podcast />
       <Projects />
