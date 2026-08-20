@@ -231,7 +231,7 @@ function WorkRail() {
   return (
     <section id="work" className="py-32 bg-[var(--ink)] text-[var(--mint)] relative overflow-hidden">
       {/* Header */}
-      <div className="px-[58px] mb-16">
+      <div className="px-6 md:px-10 lg:px-[58px] mb-16">
         <span className="text-[9px] uppercase tracking-[0.15em] font-bold text-[var(--teal)]">05 / Selected work</span>
         <h2 className="text-5xl md:text-7xl font-black tracking-tighter mt-4 leading-none">
           Work<br /><em className="text-[var(--teal)] not-italic">that</em><br />speaks<span className="text-[var(--teal)]">.</span>
@@ -247,7 +247,7 @@ function WorkRail() {
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
             {projects.map((project, index) => (
-              <div key={project.name} className="w-full flex-shrink-0 px-[58px]">
+              <div key={project.name} className="w-full flex-shrink-0 px-6 md:px-10 lg:px-[58px]">
                 <div className="grid md:grid-cols-2 gap-12 items-center min-h-[60vh]">
                   {/* Project image */}
                   <motion.div
@@ -259,13 +259,11 @@ function WorkRail() {
                     <img
                       src={project.bg}
                       alt={project.name}
-                      className="w-full h-full object-contain p-12 opacity-80 group-hover:opacity-100 transition-all duration-500 group-hover:scale-105 drop-shadow-2xl"
+                      className="w-full h-full object-scale-down p-12 bg-white opacity-80 group-hover:opacity-100 transition-all duration-500 group-hover:scale-105 drop-shadow-2xl"
                       style={{ transition: "transform 0.8s ease, opacity 0.5s ease" }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#042116] via-transparent to-transparent" />
-                    <div className="absolute top-4 left-4 bg-[var(--teal)] text-[var(--ink)] text-[10px] font-black tracking-widest uppercase px-3 py-1 rounded-full">
-                      {project.tag} / {String(total).padStart(2, "0")}
-                    </div>
+
                   </motion.div>
 
                   {/* Project info */}
@@ -279,9 +277,7 @@ function WorkRail() {
                     <span className="text-[var(--teal)] text-xs font-bold tracking-widest uppercase">{project.category}</span>
                     <h3 className="text-4xl md:text-6xl font-black tracking-tighter leading-none">{project.name}</h3>
                     <p className="text-[rgba(253,251,247,0.55)] text-sm tracking-widest uppercase leading-relaxed border-l-2 border-[var(--teal)] pl-4">{project.detail}</p>
-                    <div className="flex items-center gap-4 mt-4">
-                      <span className="text-[var(--teal)] text-xs font-bold tracking-widest uppercase opacity-60">{String(index + 1).padStart(2, "0")} of {String(total).padStart(2, "0")}</span>
-                    </div>
+
                   </motion.div>
                 </div>
               </div>
@@ -319,7 +315,7 @@ function Services() {
   const [active, setActive] = useState(0);
   const group = serviceGroups[active];
   return (
-    <section id="services" className="min-h-screen py-32 px-[58px] bg-[var(--deep)] text-[var(--mint)] relative overflow-hidden">
+    <section id="services" className="min-h-screen py-32 px-6 md:px-10 lg:px-[58px] bg-[var(--deep)] text-[var(--mint)] relative overflow-hidden">
       <div className="absolute top-[-20%] right-[-10%] w-[60%] aspect-square bg-[var(--teal)] rounded-full mix-blend-overlay blur-[120px] opacity-10 pointer-events-none" />
       
       <Reveal><span className="text-[9px] uppercase tracking-[0.15em] font-bold text-[var(--teal)]">04 / Capabilities</span></Reveal>
@@ -329,7 +325,6 @@ function Services() {
         <div className="flex flex-col border-t border-[rgba(253,251,247,0.15)]">
           {serviceGroups.map((item, index) => (
             <button key={item.name} className={`flex items-center text-left py-8 border-b border-[rgba(253,251,247,0.15)] transition-all duration-300 ${active === index ? 'text-[var(--mint)] pl-8 bg-[rgba(253,251,247,0.02)]' : 'text-[rgba(253,251,247,0.4)] hover:text-[var(--mint)] hover:pl-4'}`} onClick={() => setActive(index)}>
-              <span className="w-12 text-[10px] text-[var(--teal)] font-bold">{item.number}</span>
               <strong className="flex-1 text-3xl md:text-5xl tracking-tighter font-black">{item.name}</strong>
               <ArrowUpRight size={24} className={`transition-opacity duration-300 ${active === index ? 'opacity-100 text-[var(--teal)]' : 'opacity-0'}`} />
             </button>
@@ -364,7 +359,7 @@ function Clients() {
   const [hovered, setHovered] = useState<number | null>(null);
 
   return (
-    <section id="clients" className="py-32 px-[58px] bg-[var(--mint)] text-[var(--ink)] relative">
+    <section id="clients" className="py-32 px-6 md:px-10 lg:px-[58px] bg-[var(--mint)] text-[var(--ink)] relative">
       <div className="flex justify-between text-[9px] uppercase tracking-[0.15em] font-bold text-[rgba(6,33,22,0.5)] mb-24 border-b border-[var(--line)] pb-4">
         <span>06 / Clients</span>
         <span>Selected company</span>
@@ -386,7 +381,6 @@ function Clients() {
                 onMouseEnter={() => setHovered(index)}
               >
                 <div className="flex items-center gap-8">
-                  <span className="text-[var(--teal)] text-xs font-bold tracking-widest">{String(index + 1).padStart(2, "0")}</span>
                   <div>
                     <strong className="text-2xl md:text-5xl font-black tracking-tight group-hover:text-[var(--teal)] transition-colors block">{client.name}</strong>
                     <span className="text-[10px] font-bold tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity text-[var(--ink)] mt-2 block h-0 group-hover:h-auto overflow-hidden">{client.type}</span>
@@ -401,7 +395,7 @@ function Clients() {
       </div>
 
       {/* Render fixed image outside of Reveal to prevent stacking context clipping */}
-      <div className="fixed top-[20%] right-[58px] bottom-[20%] w-[40vw] max-w-[600px] pointer-events-none z-0 hidden lg:block perspective-1000">
+      <div className="fixed top-[20%] right-6 md:right-10 lg:right-[58px] bottom-[20%] w-[40vw] max-w-[600px] pointer-events-none z-0 hidden lg:block perspective-1000">
         <AnimatePresence>
           {hovered !== null && (
             <motion.div
@@ -415,7 +409,7 @@ function Clients() {
               <img 
                 src={clientsData[hovered].image} 
                 alt={clientsData[hovered].name} 
-                className="w-full h-full object-cover" 
+                className="w-full h-full object-scale-down p-12 bg-white" 
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[var(--deep)] to-transparent opacity-60" />
               <div className="absolute bottom-6 left-6 text-white text-[10px] font-bold tracking-widest uppercase">
@@ -520,7 +514,7 @@ export default function Index() {
 
 
 
-      <header className={`fixed top-0 left-0 right-0 h-24 px-[58px] z-50 flex items-center justify-between transition-colors duration-300 ${menuOpen ? "bg-[var(--deep)]" : "bg-gradient-to-b from-[rgba(6,64,43,0.9)] to-transparent backdrop-blur-sm"} border-b border-[rgba(255,255,255,0.1)]`}>
+      <header className={`fixed top-0 left-0 right-0 h-24 px-6 md:px-10 lg:px-[58px] z-50 flex items-center justify-between transition-colors duration-300 ${menuOpen ? "bg-[var(--deep)]" : "bg-gradient-to-b from-[rgba(6,64,43,0.9)] to-transparent backdrop-blur-sm"} border-b border-[rgba(255,255,255,0.1)]`}>
         <Logo light />
         <nav className="hidden md:flex gap-8 ml-auto mr-12 text-[10px] font-bold uppercase tracking-widest text-white opacity-80" aria-label="Main navigation">
           <SectionLink className="hover:opacity-100 hover:text-[var(--teal)] transition-colors" id="about">About</SectionLink>
@@ -537,19 +531,42 @@ export default function Index() {
         </button>
       </header>
 
-      <section id="home" className="relative h-screen min-h-[700px] flex flex-col justify-center bg-[var(--deep)] text-[var(--mint)] px-[58px] overflow-hidden">
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed inset-0 z-40 bg-[var(--deep)] pt-24 px-6 md:px-10 lg:px-[58px] flex flex-col gap-8 md:hidden"
+          >
+            <nav className="flex flex-col gap-6 text-2xl font-black uppercase tracking-tight text-white mt-12">
+              <SectionLink className="hover:text-[var(--teal)] transition-colors" id="about" onClick={closeMenu}>About</SectionLink>
+              <SectionLink className="hover:text-[var(--teal)] transition-colors" id="services" onClick={closeMenu}>Services</SectionLink>
+              <SectionLink className="hover:text-[var(--teal)] transition-colors" id="work" onClick={closeMenu}>Work</SectionLink>
+              <SectionLink className="hover:text-[var(--teal)] transition-colors" id="clients" onClick={closeMenu}>Clients</SectionLink>
+              <SectionLink className="hover:text-[var(--teal)] transition-colors" id="contact" onClick={closeMenu}>Contact</SectionLink>
+            </nav>
+            <div className="mt-auto mb-12">
+              <p className="text-[var(--teal)] text-sm font-bold tracking-widest uppercase mb-4">Connect</p>
+              <SectionLink id="contact" className="text-white font-bold" onClick={closeMenu}>Start a conversation <ArrowUpRight size={16} className="inline" /></SectionLink>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <section id="home" className="relative h-screen min-h-[500px] md:min-h-[700px] flex flex-col justify-center bg-[var(--deep)] text-[var(--mint)] px-6 md:px-10 lg:px-[58px] overflow-hidden">
         {/* Animated Background Elements */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
            <motion.div animate={{ rotate: 360, scale: [1, 1.1, 1] }} transition={{ duration: 30, repeat: Infinity, ease: "linear" }} className="absolute -top-[20%] -right-[10%] w-[70vw] h-[70vw] rounded-full bg-[var(--teal)] opacity-20 blur-[140px] mix-blend-screen" />
            <motion.div animate={{ rotate: -360, scale: [1, 1.2, 1] }} transition={{ duration: 40, repeat: Infinity, ease: "linear" }} className="absolute -bottom-[20%] -left-[10%] w-[60vw] h-[60vw] rounded-full bg-[var(--rich)] opacity-40 blur-[120px] mix-blend-screen" />
         </div>
         
-        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay pointer-events-none" />
+        <div className="absolute inset-0 bg-[url('/noise.svg')] opacity-20 mix-blend-overlay pointer-events-none" />
 
         <motion.div style={{ y: heroY, opacity: heroOpacity }} className="relative z-10 pt-24">
           <div className="flex justify-between text-[9px] uppercase tracking-[0.15em] font-bold text-[rgba(253,251,247,0.7)] mb-16">
             <span>DEALPOST / CREATIVE + STRATEGY</span>
-            <span className="hidden md:block">CHENNAI / INDIA</span>
           </div>
           
           <Reveal delay={0.2}><p className="text-[var(--teal)] text-[11px] tracking-widest uppercase font-bold mb-6">The all-in-one marketing hub</p></Reveal>
@@ -562,7 +579,7 @@ export default function Index() {
           </Reveal>
         </motion.div>
         
-        <div className="absolute bottom-12 left-[58px] right-[58px] flex justify-between text-[9px] uppercase tracking-[0.15em] font-bold z-10 border-t border-[rgba(255,255,255,0.1)] pt-6">
+        <div className="absolute bottom-12 left-6 md:left-10 lg:left-[58px] right-6 md:right-10 lg:right-[58px] flex justify-between text-[9px] uppercase tracking-[0.15em] font-bold z-10 border-t border-[rgba(255,255,255,0.1)] pt-6">
           <span className="flex items-center gap-2">Scroll to explore <motion.div animate={{ y: [0, 5, 0] }} transition={{ duration: 2, repeat: Infinity }}><ArrowDown size={14} /></motion.div></span>
           <span className="hidden md:block">Branding · Digital · Consulting</span>
         </div>
@@ -570,14 +587,14 @@ export default function Index() {
 
       <InfiniteMarquee text="Dealpost — Creative + Strategy — Brand Narratives — " speed={70} />
 
-      <section id="about" className="py-32 px-[58px] min-h-screen relative">
+      <section id="about" className="py-32 px-6 md:px-10 lg:px-[58px] min-h-screen relative">
         <div className="flex justify-between text-[9px] uppercase tracking-[0.15em] font-bold text-[rgba(6,33,22,0.5)] mb-24 border-b border-[var(--line)] pb-4">
           <span>01 / Introduction</span>
           <span>Creativity + Strategy</span>
         </div>
         
         <div className="grid lg:grid-cols-[1fr_3fr_1.5fr] gap-12 items-center">
-          <div className="text-[var(--teal)] text-[200px] leading-[0.5] font-black">“</div>
+          <div className="text-[var(--teal)] text-[120px] md:text-[200px] leading-[0.5] font-black">“</div>
           <Reveal>
             <h2 className="text-4xl md:text-6xl lg:text-8xl font-black tracking-tighter leading-[0.9]">
               Great Design<br />
@@ -593,7 +610,7 @@ export default function Index() {
         </div>
       </section>
 
-      <section id="what-we-do" className="py-32 px-[58px] bg-[var(--ink)] text-[var(--mint)] relative">
+      <section id="what-we-do" className="py-32 px-6 md:px-10 lg:px-[58px] bg-[var(--ink)] text-[var(--mint)] relative">
         <div className="flex justify-between text-[9px] uppercase tracking-[0.15em] font-bold text-[rgba(253,251,247,0.5)] mb-24 border-b border-[rgba(253,251,247,0.1)] pb-4">
           <span>03 / What we do</span>
           <span>More than an agency</span>
@@ -631,7 +648,7 @@ export default function Index() {
       <Clients />
 
       {/* PHILOSOPHY */}
-      <section className="py-32 px-[58px] bg-[var(--ink)] text-[var(--mint)] min-h-screen relative overflow-hidden">
+      <section className="py-32 px-6 md:px-10 lg:px-[58px] bg-[var(--ink)] text-[var(--mint)] min-h-screen relative overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80vw] aspect-square border border-[rgba(212,175,55,0.15)] rounded-full pointer-events-none" />
         <div className="absolute top-[10%] left-1/2 -translate-x-1/2 w-[60vw] aspect-square border border-[rgba(212,175,55,0.1)] rounded-full pointer-events-none" />
         <div className="flex justify-between text-[9px] uppercase tracking-[0.15em] font-bold text-[rgba(253,251,247,0.5)] mb-24 border-b border-[rgba(253,251,247,0.1)] pb-4">
@@ -645,7 +662,7 @@ export default function Index() {
             { text: ["We bring", <em key="n" className="text-[var(--teal)] not-italic">both</em>, "together."], delay: 0.3 },
           ].map((line, i) => (
             <Reveal key={i} delay={line.delay}>
-              <p className={`text-4xl md:text-6xl lg:text-[85px] font-black tracking-tighter leading-none ${line.indent ? "ml-[16%]" : ""}`}>
+              <p className={`text-4xl md:text-6xl lg:text-[85px] font-black tracking-tighter leading-none ${line.indent ? "ml-8 md:ml-[16%]" : ""}`}>
                 {line.text.map((part, j) => typeof part === "string" ? <span key={j}>{part} </span> : part)}
               </p>
             </Reveal>
@@ -654,7 +671,7 @@ export default function Index() {
       </section>
 
       {/* PERSONALITY */}
-      <section className="py-32 px-[58px] bg-[var(--mint)] text-[var(--ink)] relative overflow-hidden">
+      <section className="py-32 px-6 md:px-10 lg:px-[58px] bg-[var(--mint)] text-[var(--ink)] relative overflow-hidden">
         <div className="flex justify-between text-[9px] uppercase tracking-[0.15em] font-bold text-[rgba(6,33,22,0.5)] mb-16 border-b border-[var(--line)] pb-4">
           <span>08 / Personality</span>
           <span>Powerful / Human</span>
@@ -678,7 +695,7 @@ export default function Index() {
         </div>
       </section>
 
-      <section id="contact" className="py-32 px-[58px] bg-[var(--ink)] text-[var(--mint)] min-h-screen flex flex-col justify-center border-t border-[rgba(253,251,247,0.1)]">
+      <section id="contact" className="py-32 px-6 md:px-10 lg:px-[58px] bg-[var(--ink)] text-[var(--mint)] min-h-screen flex flex-col justify-center border-t border-[rgba(253,251,247,0.1)]">
 
         <div className="grid lg:grid-cols-2 gap-24 items-center">
           <Reveal>
@@ -696,7 +713,7 @@ export default function Index() {
         </div>
       </section>
 
-      <footer className="bg-[var(--deep)] text-white py-16 px-[58px] border-t border-[rgba(255,255,255,0.1)]">
+      <footer className="bg-[var(--deep)] text-white py-16 px-6 md:px-10 lg:px-[58px] border-t border-[rgba(255,255,255,0.1)]">
         <div className="flex flex-col md:flex-row justify-between items-start gap-12 pb-16 border-b border-[rgba(255,255,255,0.1)]">
           <div>
             <Logo light />

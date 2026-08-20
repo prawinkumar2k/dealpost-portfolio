@@ -1,0 +1,56 @@
+ Describing process with id 0 - name dealpost 
+┌───────────────────┬──────────────────────────────────────────────┐
+│ status            │ online                                       │
+│ name              │ dealpost                                     │
+│ namespace         │ default                                      │
+│ version           │ N/A                                          │
+│ restarts          │ 7                                            │
+│ uptime            │ 105s                                         │
+│ script path       │ /var/www/dealpost/dist/server/node-build.mjs │
+│ script args       │ N/A                                          │
+│ error log path    │ /root/.pm2/logs/dealpost-error.log           │
+│ out log path      │ /root/.pm2/logs/dealpost-out.log             │
+│ pid path          │ /root/.pm2/pids/dealpost-0.pid               │
+│ interpreter       │ /usr/bin/node                                │
+│ interpreter args  │ N/A                                          │
+│ script id         │ 0                                            │
+│ exec cwd          │ /var/www/dealpost                            │
+│ exec mode         │ fork_mode                                    │
+│ node.js version   │ 20.20.2                                      │
+│ node env          │ N/A                                          │
+│ watch & reload    │ ✘                                            │
+│ unstable restarts │ 0                                            │
+│ created at        │ 2026-08-15T15:26:51.430Z                     │
+└───────────────────┴──────────────────────────────────────────────┘
+ Actions available 
+┌────────────────────────┐
+│ km:heapdump            │
+│ km:cpu:profiling:start │
+│ km:cpu:profiling:stop  │
+│ km:heap:sampling:start │
+│ km:heap:sampling:stop  │
+└────────────────────────┘
+ Trigger via: pm2 trigger dealpost <action_name>
+
+ Code metrics value 
+┌────────────────────────┬──────────┐
+│ Heap Size              │ 9.62 MiB │
+│ Heap Usage             │ 85.77 %  │
+│ Used Heap Size         │ 8.25 MiB │
+│ Active requests        │ 0        │
+│ Active handles         │ 4        │
+│ Event Loop Latency     │ 0.42 ms  │
+│ Event Loop Latency p95 │ 1.09 ms  │
+└────────────────────────┴──────────┘
+ Divergent env variables from local env 
+┌────────────────┬───────────────────────────────────────┐
+│ PWD            │ /var/www/dealpost                     │
+│ SSH_CONNECTION │ 152.57.83.88 62982 187.127.217.225 22 │
+│ XDG_SESSION_ID │ 1534                                  │
+│ SSH_CLIENT     │ 152.57.83.88 62982 22                 │
+└────────────────┴───────────────────────────────────────┘
+
+ Add your own code metrics: http://bit.ly/code-metrics
+ Use `pm2 logs dealpost [--lines 1000]` to display logs
+ Use `pm2 env 0` to display environment variables
+ Use `pm2 monit` to monitor CPU and Memory usage dealpost
